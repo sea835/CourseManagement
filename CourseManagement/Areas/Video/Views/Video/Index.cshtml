@@ -1,0 +1,41 @@
+﻿<div class="container">
+    <table id="video-table" class="table table-striped table-bordered table-hover mx-auto"
+           style="table {
+                margin-left: auto;
+                margin-right: auto;
+            }">
+        <thead>
+        <tr>
+            <th>VideoId</th>
+            <th>LessonId</th>
+            <th>Title</th>
+            <th>Url</th>
+            <th>Duration</th>
+            <th>Provider</th>
+        </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+</div>
+
+
+@section Scripts
+{
+    <script>
+        $("#video-table").DataTable({
+            "ajax": {
+                "url": "@Url.Action("GetAllVideos")",  // Đảm bảo đường dẫn đúng
+                "type": "GET",
+                "datatype": "json"
+            },
+            "columns": [
+                { "data": "videoId"},
+                { "data": "lessonId"},
+                { "data": "title"},
+                { "data": "url"},
+                { "data": "duration"},
+                { "data": "provider"}
+            ]
+        });
+    </script>
+}

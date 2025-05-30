@@ -1,0 +1,40 @@
+﻿<div class="container">
+    <table id="chapter-table" class="table table-striped table-bordered table-hover mx-auto"
+           style="table {
+                margin-left: auto;
+                margin-right: auto;
+            }">
+        <thead>
+        <tr>
+            <th>ChapterID</th>
+            <th>CourseID</th>
+            <th>Title</th>
+            <th>Description</th>
+            <th>OrderNumber</th>
+        </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+</div>
+
+
+@section Scripts
+{
+    <script>
+        $("#chapter-table").DataTable({
+            "ajax": {
+                "url": "@Url.Action("GetAllChapters")",  // Đảm bảo đường dẫn đúng
+                "type": "GET",
+                "datatype": "json"
+            },
+            "columns": [
+                {"data": "chapterId"},          // chapterId
+                {"data": "courseId"},
+                {"data": "title"},// courseId
+                {"data": "description"},        // description
+                {"data": "orderNumber"},       // orderNumber
+                          // title
+            ]
+        });
+    </script>
+}

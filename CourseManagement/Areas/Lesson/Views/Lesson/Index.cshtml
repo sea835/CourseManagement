@@ -1,0 +1,43 @@
+﻿<div class="container">
+    <table id="lesson-table" class="table table-striped table-bordered table-hover mx-auto"
+           style="table {
+                margin-left: auto;
+                margin-right: auto;
+            }">
+        <thead>
+        <tr>
+            <th>LessonId</th>
+            <th>ChapterId</th>
+            <th>Title</th>
+            <th>OrderNumber</th>
+            <th>LessonType</th>
+            <th>Duration</th>
+            <th>IsPreviewable</th>
+        </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+</div>
+
+
+@section Scripts
+{
+    <script>
+        $("#lesson-table").DataTable({
+            "ajax": {
+                "url": "@Url.Action("GetAllLessons")",  // Đảm bảo đường dẫn đúng
+                "type": "GET",
+                "datatype": "json"
+            },
+            "columns": [
+                {"data": "lessonId"},            // lessonId
+                {"data": "chapterId"},           // chapterId
+                {"data": "title"},               // title
+                {"data": "orderNumber"},         // orderNumber
+                {"data": "lessonType"},          // lessonType
+                {"data": "duration"},            // duration
+                {"data": "isPreviewable"}        // isPreviewable
+            ]
+        });
+    </script>
+}
