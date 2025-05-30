@@ -1,0 +1,147 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>@ViewData["Title"] - CourseManagement</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true"/>
+    <link rel="stylesheet" href="~/CourseManagement.styles.css" asp-append-version="true"/>
+    <link rel="stylesheet" href="/lib/datatable/datatables.min.css"/>
+    <link rel="stylesheet" href="/lib/font-awesome/css/all.min.css"/>
+    <link rel="stylesheet" href="/css/sidebar.css"/>
+</head>
+<body>
+<header id="main-navbar">
+    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
+        <div class="container-fluid">
+            <!-- App Name -->
+            <a class="navbar-brand" href="#">
+                <h1 class="fs-4 mb-0">CourseManagement</h1>
+            </a>
+
+            <!-- Toggler Button for Mobile -->
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <!-- Navbar Links -->
+            <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+                <ul class="navbar-nav">
+                    <!-- Notifications Dropdown -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="notificationDropdown" role="button"
+                           data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fas fa-bell"></i> <!-- Notification Icon -->
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="notificationDropdown">
+                            <li><a class="dropdown-item" href="#">New Course Added</a></li>
+                            <li><a class="dropdown-item" href="#">Course Deadline Approaching</a></li>
+                            <li><a class="dropdown-item" href="#">New Enrollment</a></li>
+                        </ul>
+                    </li>
+
+                    <!-- Settings Dropdown -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="settingsDropdown" role="button"
+                           data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fas fa-cogs"></i> <!-- Settings Icon -->
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="settingsDropdown">
+                            <li><a class="dropdown-item" href="#">Account Settings</a></li>
+                            <li><a class="dropdown-item" href="#">Preferences</a></li>
+                            <li><a class="dropdown-item" href="#">Logout</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+</header>
+
+<div class="container-fluid">
+    <div class="row">
+        <!-- Sidebar -->
+        <div id="sidebar" class="d-flex flex-column flex-shrink-0 p-3 text-white bg-dark" style="width: 280px;">
+            <hr/>
+            <ul class="nav nav-pills flex-column mb-auto">
+                <li class="nav-item">
+                    <a href="#" class="nav-link active" aria-current="page">
+                        <i class="fas fa-home me-2"></i> Home
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="nav-link text-white">
+                        <i class="fas fa-book me-2"></i> Courses
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="nav-link text-white">
+                        <i class="fas fa-th me-2"></i> Categories
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="nav-link text-white">
+                        <i class="fas fa-box me-2"></i> Chapters
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="nav-link text-white">
+                        <i class="fas fa-chalkboard-teacher me-2"></i> Lessons
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="nav-link text-white">
+                        <i class="fas fa-file-alt me-2"></i> Documents
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="nav-link text-white">
+                        <i class="fas fa-video me-2"></i> Videos
+                    </a>
+                </li>
+            </ul>
+            <hr>
+            <!-- Dropdown -->
+            <div class="dropdown">
+                <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle"
+                   id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
+                    <img src="https://github.com/mdo.png" alt="" width="32" height="32" class="rounded-circle me-2">
+                    <strong>mdo</strong>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdownUser1">
+                    <li><a class="dropdown-item" href="#">New project...</a></li>
+                    <li><a class="dropdown-item" href="#">Settings</a></li>
+                    <li><a class="dropdown-item" href="#">Profile</a></li>
+                    <li>
+                        <hr class="dropdown-divider">
+                    </li>
+                    <li><a class="dropdown-item" href="#">Sign out</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="col-md-9 col-lg-10">
+            <main role="main" class="pb-3">
+                @RenderBody()
+            </main>
+        </div>
+    </div>
+</div>
+
+<footer class="border-top footer text-muted">
+    <div class="container">
+        &copy; 2025 - CourseManagement - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+    </div>
+</footer>
+
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<script src="~/js/site.js" asp-append-version="true"></script>
+<script src="~/lib/datatable/datatables.min.js"></script>
+@await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

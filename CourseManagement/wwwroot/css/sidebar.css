@@ -1,0 +1,80 @@
+﻿/* Navbar Custom Styles */
+/* Cố định header ở đầu trang */
+#main-navbar {
+    position: fixed;  /* Cố định header */
+    top: 0;           /* Đảm bảo header ở trên cùng */
+    left: 0;          /* Đảm bảo header ở bên trái */
+    width: 100%;      /* Chiếm toàn bộ chiều rộng của màn hình */
+    z-index: 1050;    /* Đảm bảo navbar luôn ở trên các phần tử khác */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Thêm bóng cho header */
+}
+
+/* Thêm khoảng cách cho nội dung chính (content) */
+body {
+    padding-top: 70px; /* Thêm khoảng cách từ trên để không bị che khuất bởi header */
+}
+
+#main-navbar .navbar {
+    padding: 10px 30px;
+}
+
+/* Các liên kết trong navbar */
+#main-navbar .nav-link {
+    font-size: 1rem;
+    padding: 8px 15px;
+}
+
+#main-navbar .nav-link:hover {
+    background-color: #007bff; /* Thêm màu nền khi hover */
+    color: white; /* Màu chữ khi hover */
+}
+
+/* Sidebar Custom Styles */
+/* Cố định sidebar */
+#sidebar {
+    position: fixed;  /* Cố định sidebar */
+    top: 50px;           /* Đảm bảo sidebar ở trên cùng */
+    left: 0;          /* Đảm bảo sidebar ở bên trái */
+    width: 280px;     /* Chiều rộng của sidebar */
+    height: 100vh;    /* Chiều cao của sidebar bằng với chiều cao màn hình */
+    background-color: #343a40; /* Màu nền sidebar */
+    z-index: 1040;    /* Đảm bảo sidebar nằm dưới navbar */
+    padding-top: 20px; /* Khoảng cách trên của sidebar */
+    overflow-y: auto; /* Cho phép cuộn nội dung trong sidebar nếu quá dài */
+}
+
+/* Thêm khoảng cách cho nội dung chính (content) */
+body {
+    padding-left: 280px; /* Để nội dung chính không bị che khuất bởi sidebar */
+}
+
+#sidebar .nav-link {
+    font-size: 1.1rem;
+    padding: 12px 20px;
+    border-radius: 8px;
+}
+
+#sidebar .nav-link:hover {
+    background-color: #007bff; /* Màu nền khi hover */
+    color: white; /* Màu chữ khi hover */
+}
+
+#sidebar .nav-link.active {
+    background-color: #007bff; /* Màu nền khi active */
+    color: white; /* Màu chữ khi active */
+}
+
+/* Dropdown Custom Styles */
+#sidebar .dropdown-menu {
+    min-width: 200px;
+}
+
+#sidebar .dropdown-item {
+    font-size: 1rem;
+}
+
+/* Thêm khoảng cách cho các mục trong dropdown */
+#sidebar .dropdown-item:hover {
+    background-color: #f0f0f0;
+    color: #007bff;
+}
