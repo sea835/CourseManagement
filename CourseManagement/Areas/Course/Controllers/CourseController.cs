@@ -1,4 +1,5 @@
 ﻿using CourseManagement.Services;
+using CourseManagement.Utilities;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CourseManagement.Areas.Course.Controllers;
@@ -20,7 +21,75 @@ public class CourseController: Controller
     
     public IActionResult GetAllCourses()
     {
-        var courses = _unitOfWork.CourseRepository.GetAll();
-        return Json(new { data = courses });
+        var result = _unitOfWork.CourseRepository.Find(c => c.IsActive).Data;
+        return Json(new { data = result });
     }
+    
+    public IActionResult CreateCourse()
+    {
+        return View();
+    }
+    
+    [HttpPost]
+    public IActionResult CreateCourse(Models.Course course)
+    {
+        course.CourseId = CourseIdGenerator.GenerateCourseId();
+        _unitOfWork.CourseRepository.Add(course);
+        _unitOfWork.SaveChange();
+        return RedirectToAction("Index");
+    }
+    
+    public IActionResult EditCourse(string id)
+    {
+        var data = _unitOfWork.CourseRepository.GetById(id);
+        if (!data.IsSuccess) return NotFound(data.ErrorMessage);
+        return View(data.Data);
+    }
+    
+    [HttpPost]
+    public IActionResult EditCourse(Models.Course course)
+    {
+        // if (!ModelState.IsValid) return View(course);
+
+        // Lấy lại bản ghi gốc từ DB để đảm bảo không ghi đè các trường hệ thống
+        var existingData = _unitOfWork.CourseRepository.GetById(course.CourseId);
+        if (!existingData.IsSuccess) return NotFound(existingData.ErrorMessage);
+
+        var existingCourse = existingData.Data as Models.Course;
+        if (existingCourse == null) return NotFound();
+
+        // Cập nhật các trường được phép sửa từ form
+        existingCourse.Title = course.Title;
+        existingCourse.Description = course.Description;
+        existingCourse.FullDescription = course.FullDescription;
+        existingCourse.Level = course.Level;
+        existingCourse.Duration = course.Duration;
+        existingCourse.Language = course.Language;
+        existingCourse.ThumbnailUrl = course.ThumbnailUrl;
+        existingCourse.Price = course.Price;
+        existingCourse.IsFree = course.IsFree;
+        existingCourse.AuthorName = course.AuthorName;
+        existingCourse.CategoryId = course.CategoryId;
+
+        // Cập nhật UpdatedAt đúng chuẩn (nếu repo chưa set tự động)
+        existingCourse.SetUpdated();
+
+        _unitOfWork.CourseRepository.Update(existingCourse);
+        _unitOfWork.SaveChange();
+
+        return RedirectToAction("Index");
+    }
+    
+    [HttpPost]
+    public IActionResult DeleteCourse(string id)
+    {
+        var data = _unitOfWork.CourseRepository.GetById(id);
+        if (!data.IsSuccess) return NotFound(data.ErrorMessage);
+        
+        _unitOfWork.CourseRepository.Delete(id);
+        _unitOfWork.SaveChange();
+        
+        return RedirectToAction("Index");
+    }
+
 }

@@ -1,4 +1,6 @@
-﻿namespace CourseManagement.Models;
+﻿using CourseManagement.Enums;
+
+namespace CourseManagement.Models;
 
 public class Course: BaseModel
 {

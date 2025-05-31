@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace CourseManagement.Areas.Video.Controllers;
 
+[Area("Video")]
 public class VideoController : Controller
 {
     private readonly IUnitOfWork _unitOfWork;

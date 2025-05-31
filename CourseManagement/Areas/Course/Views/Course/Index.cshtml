@@ -1,30 +1,51 @@
-﻿<div class="container">
-    <table id="course-table" class="table table-striped table-bordered table-hover mx-auto"
-           style="table {
-                margin-left: auto;
-                margin-right: auto;
-            }">
-        <thead>
-        <tr>
-            <th>CourseId</th>
-            <th>Title</th>
-            <th>Description</th>
-            <th>FullDescription</th>
-            <th>Level</th>
-            <th>Duration</th>
-            <th>Language</th>
-            @* <th>ThumbnailUrl</th> *@
-            <th>Price</th>
-            <th>IsFree</th>
-            <th>AuthorName</th>
-            <th>CategoryId</th>
-          
-        </tr>
-        </thead>
-        <tbody></tbody>
-    </table>
+﻿<h2>Courses</h2>
+<hr>
+<a href="@Url.Action("CreateCourse")"
+   class="btn btn-success btn-lg rounded-pill d-inline-flex align-items-center gap-2 shadow-lg custom-create-btn"
+   style="font-weight: 600; letter-spacing: 0.5px;">
+    <i class="fa-solid fa-plus fa-lg"></i> Create Course
+</a>
+<div class="container">
+    <div class="">
+        <table id="course-table" class="table table-striped table-hover table-bordered align-middle shadow-sm rounded-3 bg-white">
+            <thead>
+            <tr>
+                <th>CourseId</th>
+                <th>Title</th>
+                <th>Description</th>
+                <th>FullDescription</th>
+                <th>Level</th>
+                <th>Duration</th>
+                <th>Language</th>
+                <th>Price</th>
+                <th>IsFree</th>
+                <th>AuthorName</th>
+                <th>CategoryId</th>
+                <th style="text-align:center;">Actions</th>
+            </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
 </div>
 
+<div class="modal" tabindex="-1" role="dialog" id="delete-conform">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Warning</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Confirm delete course</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" id="btnConfirmDelete">Delete</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 @section Scripts
 {
@@ -43,12 +64,59 @@
                 {"data": "level"},               // level
                 {"data": "duration"},            // duration
                 {"data": "language"},            // language
-                // {"data": "thumbnailUrl"},        // thumbnailUrl
                 {"data": "price"},               // price
                 {"data": "isFree"},              // isFree
                 {"data": "authorName"},          // authorName
                 {"data": "categoryId"},          // categoryId
+                {
+                    "data": null,
+                    "render": function (data, type, row) {
+                        return `
+                                <div class="flex flex-row justify-between items-center space-x-2">
+                                    <a href="/Course/Course/EditCourse/${row.courseId}"
+                                       style="font-size: 25px; color: Dodgerblue;"
+                                       class="text-decoration-none hover:text-blue-700 transition-colors duration-200"
+                                       title="Edit">
+                                        <i class="fa fa-pen"></i>
+                                    </a>
+                                    <a href="#"
+                                       class="hover:text-red-600 transition-colors duration-200"
+                                       data-bs-toggle="modal" 
+                                       data-bs-target="#delete-conform"
+                                       data-course-id="${row.courseId}"
+                                       style="font-size: 25px; color: tomato;"
+                                       title="Delete">
+                                        <i class="fa fa-trash"></i>
+                                    </a>
+                                </div>
+                                `;
+                    },
+                }
             ]
+        });
+
+        $('#delete-conform').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget); // Nút vừa click
+            var courseId = button.data('course-id');
+            // Gán id vào nút xác nhận trong modal
+            $('#btnConfirmDelete').data('course-id', courseId);
+        });
+
+        $('#btnConfirmDelete').on('click', function () {
+            var courseId = $(this).data('course-id');
+            if (!courseId) return;
+            // Gọi AJAX để xóa
+            $.ajax({
+                url: '@Url.Action("DeleteCourse", "Course")/' + courseId,
+                type: 'POST',
+                success: function (result) {
+                    // Xóa thành công: reload hoặc xóa dòng khỏi table bằng JS
+                    location.reload();
+                },
+                error: function () {
+                    alert('Delete failed!');
+                }
+            });
         });
     </script>
 }

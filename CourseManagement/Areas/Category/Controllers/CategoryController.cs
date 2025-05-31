@@ -20,7 +20,7 @@ public class CategoryController: Controller
     
     public IActionResult GetAllCategories()
     {
-        var categories = _unitOfWork.CategoryRepository.GetAll();
+        var categories = _unitOfWork.CategoryRepository.GetAll().Data;
         return Json(new { data = categories });
     }
 }
