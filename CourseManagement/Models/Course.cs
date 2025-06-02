@@ -12,7 +12,7 @@ public class Course: BaseModel
     public int? Duration { get; set; }
     public string Language { get; set; }
     public string ThumbnailUrl { get; set; }
-    public decimal? Price { get; set; }
+    public double Price { get; set; }
     public bool IsFree { get; set; }
     public string AuthorName { get; set; }
 

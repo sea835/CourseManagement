@@ -1,4 +1,5 @@
-﻿using CourseManagement.Services;
+﻿using CourseManagement.Models;
+using CourseManagement.Services;
 using CourseManagement.Utilities;
 using Microsoft.AspNetCore.Mvc;
 
@@ -21,7 +22,7 @@ public class CourseController: Controller
     
     public IActionResult GetAllCourses()
     {
-        var result = _unitOfWork.CourseRepository.Find(c => c.IsActive).Data;
+        var result = _unitOfWork.CourseRepository.GetAll().Data;
         return Json(new { data = result });
     }
     
@@ -36,6 +37,8 @@ public class CourseController: Controller
         course.CourseId = CourseIdGenerator.GenerateCourseId();
         _unitOfWork.CourseRepository.Add(course);
         _unitOfWork.SaveChange();
+        TempData["ToastType"] = "success";
+        TempData["ToastMessage"] = "Course created successfully!";
         return RedirectToAction("Index");
     }
     
@@ -43,8 +46,39 @@ public class CourseController: Controller
     {
         var data = _unitOfWork.CourseRepository.GetById(id);
         if (!data.IsSuccess) return NotFound(data.ErrorMessage);
-        return View(data.Data);
+
+        var course = data.Data as Models.Course;
+        string categoryName = "";
+        if (course?.CategoryId != null)
+        {
+            var category = _unitOfWork.CategoryRepository.GetById(course.CategoryId.ToString());
+            if (category.IsSuccess)
+            {
+                categoryName = ((Models.Category)category.Data).Name;
+            }
+        }
+
+        var viewModel = new EditCourseViewModel
+        {
+            CourseId = course.CourseId,
+            Title = course.Title,
+            Description = course.Description,
+            FullDescription = course.FullDescription,
+            Level = course.Level,
+            Duration = course.Duration,
+            Language = course.Language,
+            ThumbnailUrl = course.ThumbnailUrl,
+            Price = course.Price,
+            IsFree = course.IsFree,
+            AuthorName = course.AuthorName,
+            CategoryId = course.CategoryId,
+            CategoryName = categoryName
+        };
+
+        return View(viewModel);
     }
+
+
     
     [HttpPost]
     public IActionResult EditCourse(Models.Course course)
@@ -76,7 +110,9 @@ public class CourseController: Controller
 
         _unitOfWork.CourseRepository.Update(existingCourse);
         _unitOfWork.SaveChange();
-
+        
+        TempData["ToastType"] = "info";
+        TempData["ToastMessage"] = "Course updated successfully!";
         return RedirectToAction("Index");
     }
     
@@ -89,6 +125,8 @@ public class CourseController: Controller
         _unitOfWork.CourseRepository.Delete(id);
         _unitOfWork.SaveChange();
         
+        TempData["ToastType"] = "error";
+        TempData["ToastMessage"] = "Course deleted successfully!";
         return RedirectToAction("Index");
     }
 

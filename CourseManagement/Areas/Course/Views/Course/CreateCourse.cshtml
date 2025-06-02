@@ -31,7 +31,7 @@
                         </div>
 
                         <div class="mb-3">
-                            <label asp-for="FullDescription" class="form-label fw-semibold"></label>
+                            <label asp-for="FullDescription" class="form-label fw-semibold"> Full Description</label>
                             <textarea asp-for="FullDescription" class="form-control shadow-sm" rows="4" placeholder="Full description"></textarea>
                             <span asp-validation-for="FullDescription" class="text-danger small"></span>
                         </div>
@@ -56,7 +56,7 @@
                                 <span asp-validation-for="Language" class="text-danger small"></span>
                             </div>
                             <div class="col-md-6 mb-3">
-                                <label asp-for="ThumbnailUrl" class="form-label fw-semibold"></label>
+                                <label asp-for="ThumbnailUrl" class="form-label fw-semibold">Thumbnail Url</label>
                                 <input asp-for="ThumbnailUrl" class="form-control shadow-sm" placeholder="Image URL"/>
                                 <span asp-validation-for="ThumbnailUrl" class="text-danger small"></span>
                             </div>
@@ -71,20 +71,22 @@
                             <div class="col-md-6 d-flex align-items-center mb-3">
                                 <div class="form-check mt-4">
                                     <input asp-for="IsFree" type="checkbox" class="form-check-input" id="isFreeCheck"/>
-                                    <label asp-for="IsFree" class="form-check-label ms-2"></label>
+                                    <label asp-for="IsFree" class="form-check-label ms-2">Is Free</label>
                                 </div>
                             </div>
                         </div>
 
                         <div class="mb-3">
-                            <label asp-for="AuthorName" class="form-label fw-semibold"></label>
+                            <label asp-for="AuthorName" class="form-label fw-semibold">Author Name</label>
                             <input asp-for="AuthorName" class="form-control shadow-sm" placeholder="Author name"/>
                             <span asp-validation-for="AuthorName" class="text-danger small"></span>
                         </div>
 
                         <div class="mb-4">
-                            <label asp-for="CategoryId" class="form-label fw-semibold"></label>
-                            <input asp-for="CategoryId" class="form-control shadow-sm" placeholder="Category ID"/>
+                            <label asp-for="CategoryId" class="form-label fw-semibold">Category</label>
+                            @* <input asp-for="CategoryId" class="form-control shadow-sm" placeholder="Category ID"/> *@
+                            <select asp-for="CategoryId" class="form-control shadow rounded-3 border-0 px-3 py-2" id="Category">
+                            </select>
                             <span asp-validation-for="CategoryId" class="text-danger small"></span>
                         </div>
 
@@ -107,6 +109,27 @@
         document.querySelectorAll('.hover-scale').forEach(btn => {
             btn.onmouseenter = () => btn.classList.add('scale-up');
             btn.onmouseleave = () => btn.classList.remove('scale-up');
+        });
+        
+        $("#Category").select2({
+            placeholder: "Select a category",
+            ajax: {
+                url: '@Url.Action("GetAllCategoriesSelect2", "Category", new { area = "Category" })',
+                dataType: 'json',
+                delay: 250,
+                data: function (params) {
+                    return {
+                        searchTerm: params.term
+                    };
+                },
+                processResults: function (data) {
+                    // console.log(data)
+                    return {
+                        results: data.results
+                    };
+                },
+                cache: true
+            },
         });
     </script>
     <style>

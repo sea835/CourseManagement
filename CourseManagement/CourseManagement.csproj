@@ -19,4 +19,25 @@
       <Folder Include="Areas\Content\" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Content Include="wwwroot\lib\select2\.github\CONTRIBUTING.md" />
+      <Content Include="wwwroot\lib\select2\.github\FUNDING.yml" />
+      <Content Include="wwwroot\lib\select2\.github\ISSUE_TEMPLATE.md" />
+      <Content Include="wwwroot\lib\select2\.github\PULL_REQUEST_TEMPLATE.md" />
+      <Content Include="wwwroot\lib\select2\.github\stale.yml" />
+      <Content Include="wwwroot\lib\select2\.github\workflows\docs-deploy.yml" />
+      <Content Include="wwwroot\lib\select2\.github\workflows\main.yml" />
+      <Content Include="wwwroot\lib\select2\.github\workflows\package-deploy.yml" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <_ContentIncludedByDefault Remove="Areas\Home\Views\Home\Index.cshtml" />
+      <_ContentIncludedByDefault Remove="Areas\Home\Views\Home\Privacy.cshtml" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <AdditionalFiles Include="Views\Home\Index.cshtml" />
+      <AdditionalFiles Include="Views\Home\Privacy.cshtml" />
+    </ItemGroup>
+
 </Project>

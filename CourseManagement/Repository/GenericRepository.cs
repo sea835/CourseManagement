@@ -6,11 +6,11 @@ namespace CourseManagement.Repository;
 
 public abstract class GenericRepository<T> : IRepository<T> where T : class
 {
-    private readonly AppDbContext _context;
+    protected readonly AppDbContext context;
 
     public GenericRepository(AppDbContext context)
     {
-        _context = context;
+        this.context = context;
     }
 
     public ResultViewModel Add(T entity)
@@ -22,7 +22,7 @@ public abstract class GenericRepository<T> : IRepository<T> where T : class
                 baseModel.SetCreated();
             }
 
-            _context.Set<T>().Add(entity);
+            context.Set<T>().Add(entity);
             SaveChanges();
             return ResultViewModel.Success("Added successfully", entity);
         }
@@ -41,7 +41,7 @@ public abstract class GenericRepository<T> : IRepository<T> where T : class
                 baseModel.SetUpdated();
             }
 
-            _context.Set<T>().Update(entity);
+            context.Set<T>().Update(entity);
             SaveChanges();
             return ResultViewModel.Success("Updated successfully", entity);
         }
@@ -55,7 +55,7 @@ public abstract class GenericRepository<T> : IRepository<T> where T : class
     {
         try
         {
-            var entity = _context.Set<T>().Find(id);
+            var entity = context.Set<T>().Find(id);
             if (entity == null)
                 return ResultViewModel.Fail($"No {typeof(T).Name} found with id = {id}");
             return ResultViewModel.Success(null, entity);
@@ -66,11 +66,11 @@ public abstract class GenericRepository<T> : IRepository<T> where T : class
         }
     }
 
-    public ResultViewModel GetAll()
+    public virtual ResultViewModel GetAll()
     {
         try
         {
-            var data = _context.Set<T>().ToList();
+            var data = context.Set<T>().ToList();
             return ResultViewModel.Success(null, data);
         }
         catch (Exception ex)
@@ -79,11 +79,11 @@ public abstract class GenericRepository<T> : IRepository<T> where T : class
         }
     }
 
-    public ResultViewModel Find(Expression<Func<T, bool>> predicate)
+    public virtual ResultViewModel Find(Expression<Func<T, bool>> predicate)
     {
         try
         {
-            var data = _context.Set<T>().Where(predicate).ToList();
+            var data = context.Set<T>().Where(predicate).ToList();
             return ResultViewModel.Success(null, data);
         }
         catch (Exception ex)
@@ -93,22 +93,22 @@ public abstract class GenericRepository<T> : IRepository<T> where T : class
     }
 
     // Soft Delete (if BaseModel), else Physical Delete
-    public ResultViewModel Delete(string id)
+    public virtual ResultViewModel Delete(string id)
     {
         try
         {
-            var entity = _context.Set<T>().Find(id);
+            var entity = context.Set<T>().Find(id);
             if (entity == null)
                 return ResultViewModel.Fail($"No {typeof(T).Name} found with id = {id}");
 
             if (entity is BaseModel baseModel)
             {
                 baseModel.SoftDelete();
-                _context.Set<T>().Update(entity); // update trạng thái soft delete
+                context.Set<T>().Update(entity); // update trạng thái soft delete
             }
             else
             {
-                _context.Set<T>().Remove(entity); // nếu không phải BaseModel thì xóa cứng
+                context.Set<T>().Remove(entity); // nếu không phải BaseModel thì xóa cứng
             }
 
             SaveChanges();
@@ -120,24 +120,24 @@ public abstract class GenericRepository<T> : IRepository<T> where T : class
         }
     }
 
-    public void SaveChanges()
+    public virtual void SaveChanges()
     {
-        _context.SaveChanges();
+        context.SaveChanges();
     }
 
     // Optional: Restore (cho soft-delete)
-    public ResultViewModel Restore(string id)
+    public virtual ResultViewModel Restore(string id)
     {
         try
         {
-            var entity = _context.Set<T>().Find(id);
+            var entity = context.Set<T>().Find(id);
             if (entity == null)
                 return ResultViewModel.Fail($"No {typeof(T).Name} found with id = {id}");
 
             if (entity is BaseModel baseModel)
             {
                 baseModel.Restore();
-                _context.Set<T>().Update(entity);
+                context.Set<T>().Update(entity);
                 SaveChanges();
                 return ResultViewModel.Success("Restored successfully", entity);
             }
