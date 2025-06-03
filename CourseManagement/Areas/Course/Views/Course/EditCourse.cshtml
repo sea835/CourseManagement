@@ -1,4 +1,4 @@
-﻿@model CourseManagement.Models.EditCourseViewModel
+﻿@model CourseManagement.ViewModels.CourseViewModel
 
 @{
     ViewData["Title"] = "Edit Course";
@@ -152,7 +152,7 @@
                 processResults: function (data) {
                     // console.log(data)
                     return {
-                        results: data.results
+                        results: data.results.data
                     };
                 },
                 cache: true

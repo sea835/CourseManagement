@@ -1,4 +1,5 @@
-﻿using CourseManagement.Services;
+﻿using CourseManagement.IServices;
+using CourseManagement.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CourseManagement.Areas.Document.Controllers;
@@ -6,11 +7,11 @@ namespace CourseManagement.Areas.Document.Controllers;
 [Area("Document")]
 public class DocumentController: Controller
 {
-    private readonly IUnitOfWork _unitOfWork;
+    private readonly IDocumentService documentService;
     
-    public DocumentController(IUnitOfWork unitOfWork)
+    public DocumentController(IDocumentService documentService)
     {
-        _unitOfWork = unitOfWork;
+        this.documentService = documentService;
     }
     
     public IActionResult Index()
@@ -20,7 +21,7 @@ public class DocumentController: Controller
     
     public IActionResult GetAllDocuments()
     {
-        var documents = _unitOfWork.DocumentRepository.GetAll();
+        var documents = documentService.GetAllDocuments();
         return Json(new { data = documents });
     }
 }

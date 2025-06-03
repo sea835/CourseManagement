@@ -1,4 +1,6 @@
+using CourseManagement.IServices;
 using CourseManagement.Services;
+using CourseManagement.UnitOfWork;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -11,6 +13,13 @@ builder.Services.AddDbContext<AppDbContext>(options =>
         ServerVersion.AutoDetect(builder.Configuration.GetConnectionString("DefaultConnection"))));
 
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+builder.Services.AddScoped<ICourseService,CourseService>();
+builder.Services.AddScoped<ICategoryService, CategoryService>();
+builder.Services.AddScoped<IChapterService, ChapterService>();
+builder.Services.AddScoped<ILessonService, LessonService>();
+builder.Services.AddScoped<IContentService, ContentService>();
+builder.Services.AddScoped<IDocumentService, DocumentService>();
+builder.Services.AddScoped<IVideoService, VideoService>();
 
 var app = builder.Build();
 
@@ -31,10 +40,7 @@ app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "Area",
-    // areaName: "Course",
-    pattern: "{area:exists}/{controller=Course}/{action=Index}/{id?}");
-
-
+    pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
 
 app.MapControllerRoute(
     name: "default",

@@ -1,4 +1,5 @@
-﻿using CourseManagement.Services;
+﻿using CourseManagement.IServices;
+using CourseManagement.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CourseManagement.Areas.Video.Controllers;
@@ -6,11 +7,11 @@ namespace CourseManagement.Areas.Video.Controllers;
 [Area("Video")]
 public class VideoController : Controller
 {
-    private readonly IUnitOfWork _unitOfWork;
+    private readonly IVideoService videoService;
 
-    public VideoController(IUnitOfWork unitOfWork)
+    public VideoController(IVideoService videoService)
     {
-        _unitOfWork = unitOfWork;
+        this.videoService = videoService;
     }
 
     public IActionResult Index()
@@ -20,7 +21,7 @@ public class VideoController : Controller
 
     public IActionResult GetAllVideos()
     {
-        var videos = _unitOfWork.VideoRepository.GetAll();
+        var videos = videoService.GetAllVideos();
         return Json(new { data = videos });
     }
 }

@@ -1,4 +1,5 @@
-﻿using CourseManagement.Services;
+﻿using CourseManagement.IServices;
+using CourseManagement.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CourseManagement.Areas.Chapter.Controllers;
@@ -6,11 +7,11 @@ namespace CourseManagement.Areas.Chapter.Controllers;
 [Area("Chapter")]
 public class ChapterController: Controller
 {
-    private readonly IUnitOfWork _unitOfWork;
+    private readonly IChapterService chapterService;
     
-    public ChapterController(IUnitOfWork unitOfWork)
+    public ChapterController(IChapterService chapterService)
     {
-        _unitOfWork = unitOfWork;
+        this.chapterService = chapterService;
     }
     
     public IActionResult Index()
@@ -20,7 +21,7 @@ public class ChapterController: Controller
     
     public IActionResult GetAllChapters()
     {
-        var chapters = _unitOfWork.ChapterRepository.GetAll().Data;
+        var chapters = chapterService.GetAllChapters();
         return Json(new { data = chapters });
     }
 }

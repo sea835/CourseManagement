@@ -1,4 +1,5 @@
-﻿using CourseManagement.Services;
+﻿using CourseManagement.IServices;
+using CourseManagement.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CourseManagement.Areas.Lesson.Controllers;
@@ -6,11 +7,11 @@ namespace CourseManagement.Areas.Lesson.Controllers;
 [Area("Lesson")]
 public class LessonController: Controller
 {
-    private readonly IUnitOfWork _unitOfWork;
+    private readonly ILessonService lessonService;
     
-    public LessonController(IUnitOfWork unitOfWork)
+    public LessonController(ILessonService lessonService)
     {
-        _unitOfWork = unitOfWork;
+        this.lessonService = lessonService;
     }
     
     public IActionResult Index()
@@ -20,7 +21,7 @@ public class LessonController: Controller
     
     public IActionResult GetAllLessons()
     {
-        var lessons = _unitOfWork.LessionRepository.GetAll();
+        var lessons = lessonService.GetAllLessons();
         return Json(new { data = lessons });
     }
 }
