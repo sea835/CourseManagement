@@ -1,4 +1,4 @@
-﻿@model CourseManagement.Core.Models.Category
+﻿@model CourseManagement.Core.ViewModels.ChapterViewModel
 
 <div class="container py-5">
     <div class="row justify-content-center">
@@ -10,40 +10,38 @@
             </div>
             <div class="card shadow-lg rounded-4 border-0">
                 <div class="card-header bg-primary text-white rounded-top-4">
-                    <h2 class="mb-0 fw-bold"><i class="fas fa-plus-circle me-2"></i>Create New Category</h2>
+                    <h2 class="mb-0 fw-bold"><i class="fas fa-plus-circle me-2"></i>Create New Chapter</h2>
                 </div>
                 <div class="card-body p-4">
-                    <form asp-action="CreateCategory" method="post" enctype="multipart/form-data" autocomplete="off">
+                    <form asp-action="CreateChapter" method="post" enctype="multipart/form-data" autocomplete="off">
                         <div class="mb-3">
-                            <label asp-for="Name" class="form-label fw-semibold"></label>
-                            <input asp-for="Name" class="form-control form-control-lg shadow-sm" placeholder="Category name..."/>
-                            <span asp-validation-for="Name" class="text-danger small"></span>
+                            <label asp-for="Title" class="form-label fw-semibold"></label>
+                            <input asp-for="Title" class="form-control form-control-lg shadow-sm" placeholder="Chapter title..."/>
+                            <span asp-validation-for="Title" class="text-danger small"></span>
                         </div>
 
                         <div class="mb-3">
                             <label asp-for="Description" class="form-label fw-semibold"></label>
-                            <textarea asp-for="Description" class="form-control shadow-sm" rows="3" placeholder="Category description"></textarea>
+                            <textarea asp-for="Description" class="form-control shadow-sm" rows="3" placeholder="Chapter description"></textarea>
                             <span asp-validation-for="Description" class="text-danger small"></span>
                         </div>
 
+                        <div class="mb-3">
+                            <label asp-for="OrderNumber" class="form-label fw-semibold">Order</label>
+                            <input asp-for="OrderNumber" type="number" class="form-control shadow-sm" min="1" placeholder="Chapter order"/>
+                            <span asp-validation-for="OrderNumber" class="text-danger small"></span>
+                        </div>
+
                         <div class="mb-4">
-                            <label asp-for="Icon" class="form-label fw-semibold">Icon URL</label>
-                            <div class="input-group">
-                                <input asp-for="Icon" class="form-control shadow-sm" placeholder="Icon URL"/>
-                                <label class="input-group-text" for="fileUpload">
-                                    <i class="fas fa-upload"></i>
-                                </label>
-                                <input type="file" id="fileUpload" name="IconImage" class="d-none" onchange="displaySelectedImage(this)"/>
-                            </div>
-                            <span asp-validation-for="Icon" class="text-danger small"></span>
-                            <div class="mt-2">
-                                <img id="imagePreview" src="#" alt="Preview" class="img-thumbnail d-none" style="max-height: 150px"/>
-                            </div>
+                            <label asp-for="CourseId" class="form-label fw-semibold">Course</label>
+                            <select asp-for="CourseId" class="form-control shadow rounded-3 border-0 px-3 py-2" id="course-select2">
+                            </select>
+                            <span asp-validation-for="CourseId" class="text-danger small"></span>
                         </div>
 
                         <div class="d-grid">
                             <button type="submit" class="btn btn-primary btn-lg rounded-pill shadow-sm hover-scale">
-                                <i class="fas fa-save me-2"></i>Create Category
+                                <i class="fas fa-save me-2"></i>Create Chapter
                             </button>
                         </div>
                     </form>
@@ -60,19 +58,26 @@
             btn.onmouseenter = () => btn.classList.add('scale-up');
             btn.onmouseleave = () => btn.classList.remove('scale-up');
         });
-
-        function displaySelectedImage(input) {
-            if (input.files && input.files[0]) {
-                const reader = new FileReader();
-                
-                reader.onload = function(e) {
-                    $('#imagePreview').attr('src', e.target.result);
-                    $('#imagePreview').removeClass('d-none');
-                }
-                
-                reader.readAsDataURL(input.files[0]);
-            }
-        }
+        
+        $("#course-select2").select2({
+            placeholder: "Select a course",
+            ajax: {
+                url: '@Url.Action("GetAllCoursesSelect2", "Course", new { area = "Course" })',
+                dataType: 'json',
+                delay: 250,
+                data: function (params) {
+                    return {
+                        searchTerm: params.term
+                    };
+                },
+                processResults: function (data) {
+                    return {
+                        results: data.results.data
+                    };
+                },
+                cache: true
+            },
+        });
     </script>
     <style>
         .hover-scale { transition: transform 0.15s cubic-bezier(.4,0,.2,1); }

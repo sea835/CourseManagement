@@ -34,6 +34,30 @@ public class CategoryController(ICategoryService categoryService): Controller
     public IActionResult CreateCategory(CategoryViewModel categoryViewModel)
     {
         categoryService.CreateCategory(categoryViewModel);
+        return RedirectToAction("Index");
+    }
+
+    public IActionResult EditCategory(string id)
+    {
+        var category = categoryService.GetCategoryById(id).Data;
+        return View(category);
+    }
+    
+    [HttpPost]
+    public IActionResult EditCategory(CategoryViewModel categoryViewModel)
+    {
+        categoryService.UpdateCategory(categoryViewModel);
+        TempData["ToastType"] = "info";
+        TempData["ToastMessage"] = "Category updated successfully!";
+        return RedirectToAction("Index");
+    }
+
+    [HttpPost]
+    public IActionResult DeleteCategory(string id)
+    {
+        categoryService.DeleteCategory(id);
+        TempData["ToastType"] = "error";
+        TempData["ToastMessage"] = "Category delete successfully!";
         return Ok();
     }
 }

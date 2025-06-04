@@ -18,7 +18,7 @@ public class ContentService: IContentService
     {
         try
         {
-            var content = unitOfWork.Content.Find(c => c.ContentId == id);
+            var content = unitOfWork.Content.BuildQuery(c => c.ContentId == id);
             return ResultViewModel.Success("Get Content Id: " + id + " Success", content);
         }
         catch (Exception ex)
@@ -31,7 +31,7 @@ public class ContentService: IContentService
     {
         try
         {
-            var existingContent = unitOfWork.Content.Find(c => c.ContentId == content.ContentId).First();
+            var existingContent = unitOfWork.Content.BuildQuery(c => c.ContentId == content.ContentId).First();
             if (existingContent == null)
             {
                 return ResultViewModel.Fail("Content not found");

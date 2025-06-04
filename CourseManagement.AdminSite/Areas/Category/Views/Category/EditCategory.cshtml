@@ -1,1 +1,72 @@
-﻿
+﻿@model CourseManagement.Core.Models.Category
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="mb-4">
+                <a href="javascript:history.back()" class="btn btn-outline-secondary rounded-pill">
+                    <i class="fas fa-arrow-left me-2"></i> Back
+                </a>
+            </div>
+            <div class="card shadow-lg rounded-4 border-0">
+                <div class="card-header bg-primary text-white rounded-top-4">
+                    <h2 class="mb-0 fw-bold"><i class="fas fa-edit me-2"></i>Edit Category</h2>
+                </div>
+                <div class="card-body p-4">
+                    <form asp-action="EditCategory" method="post" enctype="multipart/form-data" autocomplete="off">
+                        <input type="hidden" asp-for="CategoryId" />
+
+                        <div class="mb-3">
+                            <label asp-for="Name" class="form-label fw-semibold"></label>
+                            <input asp-for="Name" class="form-control form-control-lg shadow-sm" placeholder="Category name..."/>
+                            <span asp-validation-for="Name" class="text-danger small"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Description" class="form-label fw-semibold"></label>
+                            <textarea asp-for="Description" class="form-control shadow-sm" rows="3" placeholder="Category description"></textarea>
+                            <span asp-validation-for="Description" class="text-danger small"></span>
+                        </div>
+
+                        <div class="mb-4">
+                            <label asp-for="Icon" class="form-label fw-semibold">Icon URL</label>
+                            <div class="input-group">
+                                <input asp-for="Icon" class="form-control shadow-sm" placeholder="Icon URL"/>
+                                <label class="input-group-text" for="fileUpload">
+                                    <i class="fas fa-upload"></i>
+                                </label>
+                                <input type="file" id="fileUpload" name="IconImage" class="d-none" onchange="displaySelectedImage(this)"/>
+                            </div>
+                        </div>
+
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary btn-lg rounded-pill shadow-sm hover-scale">
+                                <i class="fas fa-save me-2"></i>Save Changes
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        document.querySelectorAll('.hover-scale').forEach(btn => {
+            btn.onmouseenter = () => btn.classList.add('scale-up');
+            btn.onmouseleave = () => btn.classList.remove('scale-up');
+        });
+    </script>
+    <style>
+        .hover-scale { transition: transform 0.15s cubic-bezier(.4,0,.2,1); }
+        .hover-scale.scale-up { transform: scale(1.06); box-shadow: 0 8px 24px rgba(80,80,200,0.13); }
+        .card { transition: box-shadow .2s; }
+        .card:hover { box-shadow: 0 8px 32px rgba(80,80,200,0.14); }
+        .form-control:focus { box-shadow: 0 0 6px 1px #4299e1; border-color: #4299e1; }
+        .form-check-input:focus { box-shadow: 0 0 0 0.2rem rgba(66,153,225,.25); }
+        .btn-primary { background: linear-gradient(90deg,#4299e1 0,#2462c7 100%); border: none; }
+        .btn-primary:hover, .btn-primary:focus { background: linear-gradient(90deg,#2462c7 0,#4299e1 100%); }
+    </style>
+}

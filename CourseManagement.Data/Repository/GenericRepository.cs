@@ -47,7 +47,7 @@ public abstract class GenericRepository<T> : IRepository<T> where T : class
         return entities;
     }
 
-    public IEnumerable<T> Find(Expression<Func<T, bool>> predicate)
+    public IEnumerable<T> BuildQuery(Expression<Func<T, bool>> predicate)
     {
         var entities = context.Set<T>().Where(predicate);
         return entities;

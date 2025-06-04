@@ -10,5 +10,6 @@ public interface ICourseService
     public ResultViewModel CreateCourse(Course course);
     public ResultViewModel UpdateCourse(CourseViewModel course);
     public ResultViewModel DeleteCourse(string id);
+    public ResultViewModel GetAllCoursesSelect2(string search);
 
 }

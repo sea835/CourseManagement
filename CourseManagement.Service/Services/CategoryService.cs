@@ -18,7 +18,7 @@ public class CategoryService: ICategoryService
     {
         try
         {
-            var categories = unitOfWork.Category.GetAll();
+            var categories = unitOfWork.Category.GetAll().Where(c => c.IsDeleted == false);
             return ResultViewModel.Success("Get All Categories Success!", categories);
         }
         catch (Exception ex)
@@ -31,7 +31,7 @@ public class CategoryService: ICategoryService
     {
         try
         {
-            var category = unitOfWork.Category.Find(c => c.CategoryId == id);
+            var category = unitOfWork.Category.BuildQuery(c => c.CategoryId == id).FirstOrDefault();
             return ResultViewModel.Success("Get Category Id: " + id + " Success", category);
         }
         catch (Exception ex)
@@ -89,7 +89,7 @@ public class CategoryService: ICategoryService
         {
             var categories = unitOfWork.Category.GetAll();
             var select2Result = categories
-                .Where(c => string.IsNullOrEmpty(search) || c.Name.Contains(search, StringComparison.OrdinalIgnoreCase))
+                .Where(c => c.IsDeleted == false && (string.IsNullOrEmpty(search) || c.Name.Contains(search, StringComparison.OrdinalIgnoreCase)))
                 .Select(c => new Select2ViewModel
                 {
                     Id = c.CategoryId,

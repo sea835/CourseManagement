@@ -43,7 +43,6 @@ public class CourseController : Controller
     public IActionResult EditCourse(string id)
     {
         var course = courseService.GetCourseById(id);
-
         return View(course);
     }
 
@@ -65,5 +64,11 @@ public class CourseController : Controller
         TempData["ToastType"] = "error";
         TempData["ToastMessage"] = "Course deleted successfully!";
         return RedirectToAction("Index");
+    }
+
+    public IActionResult GetAllCoursesSelect2(string searchTerm)
+    {
+        var courses = courseService.GetAllCoursesSelect2(searchTerm);
+        return Json(new { results = courses });
     }
 }

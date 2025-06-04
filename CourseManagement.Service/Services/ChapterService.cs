@@ -44,7 +44,7 @@ public class ChapterService: IChapterService
     {
         try
         {
-            var chapter = unitOfWork.Chapter.Find(c => c.ChapterId == id);
+            var chapter = unitOfWork.Chapter.BuildQuery(c => c.ChapterId == id);
             return ResultViewModel.Success("Get chapter by id: " + id + " successfully", chapter);
         }
         catch (Exception ex)

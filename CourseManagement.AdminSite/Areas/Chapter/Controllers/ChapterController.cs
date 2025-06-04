@@ -23,4 +23,9 @@ public class ChapterController: Controller
         var chapters = chapterService.GetAllChapters().Data;
         return Json(new { data = chapters });
     }
+    
+    public IActionResult CreateChapter()
+    {
+        return View();
+    }
 }

@@ -28,8 +28,8 @@ public class CourseService : ICourseService
     {
         try
         {
-            var query = unitOfWork.Course.Find(c => c.CourseId == id).FirstOrDefault();
-            var category = unitOfWork.Category.Find(c => c.CategoryId == query.CategoryId).FirstOrDefault();
+            var query = unitOfWork.Course.BuildQuery(c => c.CourseId == id).FirstOrDefault();
+            var category = unitOfWork.Category.BuildQuery(c => c.CategoryId == query.CategoryId).FirstOrDefault();
             var course = new CourseViewModel()
             {
                 CourseId = query.CourseId,
@@ -58,7 +58,7 @@ public class CourseService : ICourseService
     {
         try
         {
-            course.CourseId = CourseIdGenerator.GenerateCourseId();
+            course.CourseId = IdGenerator.GenerateCourseId();
             unitOfWork.Course.Add(course);
             unitOfWork.SaveChange();
             return ResultViewModel.Success("Create New Course Success");
@@ -91,6 +91,25 @@ public class CourseService : ICourseService
             unitOfWork.Course.Update(course);
             unitOfWork.SaveChange();
             return ResultViewModel.Success("Update Course Success");
+        }
+        catch (Exception ex)
+        {
+            return ResultViewModel.FailException(ex);
+        }
+    }
+    
+    public ResultViewModel GetAllCoursesSelect2(string search)
+    {
+        try
+        {
+            var courses = unitOfWork.Course.GetAll()
+                .Where(c => c.IsDeleted == false && (string.IsNullOrEmpty(search) || c.Title.Contains(search, StringComparison.OrdinalIgnoreCase)))
+                .Select(c => new Select2ViewModel
+                {
+                    Id = c.CourseId,
+                    Text = c.Title
+                });
+            return ResultViewModel.Success("Get All Courses Select2 Success", courses);
         }
         catch (Exception ex)
         {
