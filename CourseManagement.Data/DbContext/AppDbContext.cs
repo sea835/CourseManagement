@@ -15,4 +15,5 @@ public class AppDbContext : Microsoft.EntityFrameworkCore.DbContext
     public DbSet<Content> Contents { get; set; }
     public DbSet<Video> Videos { get; set; }
     public DbSet<Document> Documents { get; set; }
+    
 }
