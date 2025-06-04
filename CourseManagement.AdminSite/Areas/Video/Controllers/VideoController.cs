@@ -20,7 +20,7 @@ public class VideoController : Controller
 
     public IActionResult GetAllVideos()
     {
-        var videos = videoService.GetAllVideos();
+        var videos = videoService.GetAllVideos().Data;
         return Json(new { data = videos });
     }
 }

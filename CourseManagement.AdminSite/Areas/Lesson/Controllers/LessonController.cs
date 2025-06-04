@@ -21,7 +21,7 @@ public class LessonController: Controller
     
     public IActionResult GetAllLessons()
     {
-        var lessons = lessonService.GetAllLessons();
+        var lessons = lessonService.GetAllLessons().Data;
         return Json(new { data = lessons });
     }
 }

@@ -1,0 +1,150 @@
+﻿/* Áp dụng cho tất cả các bảng: category-table, course-table, chapter-table, lesson-table, document-table, video-table */
+#category-table, #course-table, #chapter-table, #lesson-table, #document-table, #video-table {
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);  /* Bóng đổ nhẹ tạo chiều sâu */
+    background: #fff;
+    transition: box-shadow 0.3s ease;  /* Thêm hiệu ứng mượt cho shadow */
+}
+
+/* Áp dụng cho header của tất cả các bảng */
+#category-table th, #course-table th, #chapter-table th, #lesson-table th, #document-table th, #video-table th {
+    background: linear-gradient(90deg, #06b6d4 0%, #38b2ac 100%);  /* Màu gradient tinh tế */
+    color: #fff;
+    font-weight: 600;
+    font-size: 1.1rem;
+    text-align: center;
+    vertical-align: middle !important;
+    padding: 12px 20px;
+    transition: background-color 0.3s ease;
+}
+
+/* Tăng hiệu ứng hover cho header của các bảng */
+#category-table th:hover, #course-table th:hover, #chapter-table th:hover, #lesson-table th:hover, #document-table th:hover, #video-table th:hover {
+    background: linear-gradient(90deg, #38b2ac 0%, #06b6d4 100%);
+}
+
+/* Áp dụng cho dữ liệu (td) của tất cả các bảng */
+#category-table td, #course-table td, #chapter-table td, #lesson-table td, #document-table td, #video-table td {
+    vertical-align: middle !important;
+    font-size: 1rem;
+    padding: 12px 18px;
+    transition: background-color 0.2s ease;
+}
+
+/* Hover cho các dòng trong bảng */
+#category-table tbody tr:hover, #course-table tbody tr:hover, #chapter-table tbody tr:hover, #lesson-table tbody tr:hover, #document-table tbody tr:hover, #video-table tbody tr:hover {
+    background: #f1f9fc !important;  /* Sáng hơn khi hover */
+    transition: background 0.2s ease-in-out;
+}
+
+/* Các icon hành động */
+.action-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background: #f3f3f3;
+    font-size: 22px;
+    margin: 0 4px;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(50, 150, 150, 0.12);
+    border: none;
+    outline: none;
+    transition: background 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Tăng hiệu ứng hover cho các icon */
+.action-icon:hover {
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+}
+
+.action-icon.edit:hover {
+    background: #e0f7fa;
+    color: #0288d1;
+}
+.action-icon.delete:hover {
+    background: #ffe0e0;
+    color: #d32f2f;
+}
+
+/* Responsive: Ẩn các cột dài trên mobile */
+@media (max-width: 991px) {
+    #category-table th:nth-child(3),
+    #course-table th:nth-child(3),
+    #chapter-table th:nth-child(3),
+    #lesson-table th:nth-child(3),
+    #document-table th:nth-child(3),
+    #video-table th:nth-child(3),
+    #category-table th:nth-child(4),
+    #course-table th:nth-child(4),
+    #chapter-table th:nth-child(4),
+    #lesson-table th:nth-child(4),
+    #document-table th:nth-child(4),
+    #video-table th:nth-child(4),
+    #category-table td:nth-child(3),
+    #course-table td:nth-child(3),
+    #chapter-table td:nth-child(3),
+    #lesson-table td:nth-child(3),
+    #document-table td:nth-child(3),
+    #video-table td:nth-child(3),
+    #category-table td:nth-child(4),
+    #course-table td:nth-child(4),
+    #chapter-table td:nth-child(4),
+    #lesson-table td:nth-child(4),
+    #document-table td:nth-child(4),
+    #video-table td:nth-child(4) {
+        display: none;
+    }
+}
+
+/* Cấu trúc Modal đẹp hơn */
+.modern-modal .modal-content {
+    border-radius: 1.5rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    animation: scaleIn 0.3s cubic-bezier(0.6, 1.2, 0.3, 1) forwards;
+    border: none;
+}
+
+.modern-modal .modal-header {
+    border-bottom: none;
+    background: linear-gradient(90deg, #6366f1 0%, #06b6d4 100%) !important;
+}
+
+.modern-modal .modal-title i {
+    color: #fff;
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 50%;
+    padding: 8px;
+    margin-right: 4px;
+}
+
+.modern-modal .modal-body {
+    background: #f7fafc;
+    border-bottom-left-radius: 1.3rem;
+    border-bottom-right-radius: 1.3rem;
+    font-size: 1.2rem;
+    color: #333;
+    min-height: 140px;
+    max-height: 500px;
+    overflow-y: auto;
+    transition: background 0.3s;
+}
+
+.modern-modal .btn-close {
+    filter: brightness(2.5);
+    opacity: 0.85;
+    transition: opacity 0.2s;
+}
+
+.modern-modal .btn-close:hover, .modern-modal .btn-close:focus {
+    opacity: 1;
+}
+
+/* Animation Modal */
+@keyframes scaleIn {
+    0% {transform: scale(0.9);}
+    100% {transform: scale(1);}
+}

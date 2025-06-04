@@ -20,7 +20,7 @@ public class DocumentController: Controller
     
     public IActionResult GetAllDocuments()
     {
-        var documents = documentService.GetAllDocuments();
+        var documents = documentService.GetAllDocuments().Data;
         return Json(new { data = documents });
     }
 }

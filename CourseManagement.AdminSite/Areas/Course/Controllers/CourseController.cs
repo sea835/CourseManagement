@@ -22,8 +22,8 @@ public class CourseController : Controller
 
     public IActionResult GetAllCourses()
     {
-        var result = courseService.GetAllCourse();
-        return Json(new { data = result.Data });
+        var result = courseService.GetAllCourse().Data;
+        return Json(new { data = result });
     }
 
     public IActionResult CreateCourse()

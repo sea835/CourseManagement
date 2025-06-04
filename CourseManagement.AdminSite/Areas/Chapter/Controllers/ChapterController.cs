@@ -20,7 +20,7 @@ public class ChapterController: Controller
     
     public IActionResult GetAllChapters()
     {
-        var chapters = chapterService.GetAllChapters();
+        var chapters = chapterService.GetAllChapters().Data;
         return Json(new { data = chapters });
     }
 }
