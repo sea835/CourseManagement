@@ -1,0 +1,23 @@
+﻿.main-content {
+    margin-left: 100px;
+}
+
+#toast-container > .toast-success {
+    background-color: #00c853 !important; /* xanh lá tươi */
+    color: #fff !important;
+}
+
+#toast-container > .toast-error {
+    background-color: #d32f2f !important; /* đỏ đậm */
+    color: #fff !important;
+}
+
+#toast-container > .toast-info {
+    background-color: #1976d2 !important; /* xanh dương đậm */
+    color: #fff !important;
+}
+
+#toast-container > .toast-warning {
+    background-color: #ff9800 !important; /* cam đậm */
+    color: #fff !important;
+}
