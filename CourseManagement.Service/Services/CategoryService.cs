@@ -59,6 +59,11 @@ public class CategoryService: ICategoryService
     {
         try
         {
+            var existingCategory = unitOfWork.Category.BuildQuery(c => c.CategoryId == category.CategoryId).FirstOrDefault();
+            existingCategory.CategoryId = category.CategoryId;
+            existingCategory.Name = category.Name;
+            existingCategory.Description = category.Description;
+            existingCategory.SetUpdated();
             unitOfWork.Category.Update(category);
             unitOfWork.SaveChange();
             return ResultViewModel.Success("Update Category Success");

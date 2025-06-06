@@ -5,16 +5,8 @@ using Microsoft.AspNetCore.Mvc;
 namespace CourseManagement.AdminSite.Areas.Course.Controllers;
 
 [Area("Course")]
-public class CourseController : Controller
+public class CourseController(ICourseService courseService) : Controller
 {
-    private readonly ICourseService courseService;
-    private readonly ICategoryService categoryService;
-
-    public CourseController(ICourseService courseService)
-    {
-        this.courseService = courseService;
-    }
-
     public IActionResult Index()
     {
         return View();
@@ -22,8 +14,14 @@ public class CourseController : Controller
 
     public IActionResult GetAllCourses()
     {
-        var result = courseService.GetAllCourse().Data;
+        var result = courseService.GetAllCourse();
         return Json(new { data = result });
+    }
+
+    public IActionResult GetCourseById(string id)
+    {
+        var course = courseService.GetCourseById(id);
+        return Json(course);
     }
 
     public IActionResult CreateCourse()
@@ -50,9 +48,6 @@ public class CourseController : Controller
     public IActionResult EditCourse(CourseViewModel courseViewModel)
     {
         courseService.UpdateCourse(courseViewModel);
-
-        TempData["ToastType"] = "info";
-        TempData["ToastMessage"] = "Course updated successfully!";
         return RedirectToAction("Index");
     }
 
@@ -70,5 +65,27 @@ public class CourseController : Controller
     {
         var courses = courseService.GetAllCoursesSelect2(searchTerm);
         return Json(new { results = courses });
+    }
+    
+    public IActionResult GetAllCoursesByCategoryId(string categoryId)
+    {
+        var courses = courseService.GetAllCoursesByCategoryId(categoryId);
+        return Json(new { data = courses });
+    }
+    
+    public IActionResult GetCourseByLessonId(string id)
+    {
+        var course = courseService.GetCourseByLessonId(id);
+        return Json(course);
+    }
+    
+    public IActionResult GetCourseByLessonIdSelect2(string lessonId)
+    {
+        var course = courseService.GetCourseByLessonId(lessonId);
+        return Json(new
+        {
+            id = course.CourseId,
+            text = course.Title
+        });
     }
 }

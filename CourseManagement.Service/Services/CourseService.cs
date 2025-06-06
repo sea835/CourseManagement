@@ -12,15 +12,34 @@ public class CourseService : ICourseService
     {
         this.unitOfWork = unitOfWork;
     }
-    public ResultViewModel GetAllCourse()
+    public IEnumerable<CourseViewModel> GetAllCourse()
     {
         try
         {
-            var courses = unitOfWork.Course.GetAll().Where(c => c.IsDeleted == false);
-            return ResultViewModel.Success("Get All Course Success!",courses);
+            var courses = unitOfWork.Course.GetAll().Where(c => c.IsDeleted == false).ToList();
+            var categories = unitOfWork.Category.GetAll().Where(c => c.IsDeleted == false).ToList();
+            var courseViewModels = from course in courses
+                                   join category in categories on course.CategoryId equals category.CategoryId
+                                   select new CourseViewModel
+                                   {
+                                       CourseId = course.CourseId,
+                                       Title = course.Title,
+                                       Description = course.Description,
+                                       FullDescription = course.FullDescription,
+                                       Level = course.Level,
+                                       Duration = course.Duration,
+                                       Language = course.Language,
+                                       ThumbnailUrl = course.ThumbnailUrl,
+                                       Price = course.Price,
+                                       IsFree = course.IsFree,
+                                       AuthorName = course.AuthorName,
+                                       CategoryId = course.CategoryId,
+                                       CategoryName = category.Name
+                                   };
+            return courseViewModels;
         }
         catch (Exception ex){ 
-            return ResultViewModel.FailException(ex);
+            throw new Exception("Get All Course Failed", ex);
         }
     }
 
@@ -87,8 +106,20 @@ public class CourseService : ICourseService
     {
         try
         {
-            course.SetUpdated();
-            unitOfWork.Course.Update(course);
+            var existingCourse = unitOfWork.Course.BuildQuery(c=> c.CourseId == course.CourseId).FirstOrDefault();
+            existingCourse.Title = course.Title;
+            existingCourse.Description = course.Description;
+            existingCourse.FullDescription = course.FullDescription;
+            existingCourse.Level = course.Level;
+            existingCourse.Duration = course.Duration;
+            existingCourse.Language = course.Language;
+            existingCourse.ThumbnailUrl = course.ThumbnailUrl;
+            existingCourse.Price = course.Price;
+            existingCourse.IsFree = course.IsFree;
+            existingCourse.AuthorName = course.AuthorName;
+            existingCourse.CategoryId = course.CategoryId;
+            existingCourse.SetUpdated();
+            unitOfWork.Course.Update(existingCourse);
             unitOfWork.SaveChange();
             return ResultViewModel.Success("Update Course Success");
         }
@@ -115,5 +146,49 @@ public class CourseService : ICourseService
         {
             return ResultViewModel.FailException(ex);
         }
+    }
+    
+    public ResultViewModel GetAllCoursesByCategoryId(string categoryId)
+    {
+        try
+        {
+            var courses = unitOfWork.Course.GetAll()
+                .Where(c => c.IsDeleted == false && c.CategoryId == categoryId)
+                .Select(c => new Select2ViewModel
+                {
+                    Id = c.CourseId,
+                    Text = c.Title
+                });
+            return ResultViewModel.Success("Get All Courses By Category Id Success", courses);
+        }
+        catch (Exception ex)
+        {
+            return ResultViewModel.FailException(ex);
+        }
+    }
+
+    public CourseViewModel GetCourseByLessonId(string lessonId)
+    {
+        var lesson = unitOfWork.Lesson.BuildQuery(l => l.LessonId == lessonId).FirstOrDefault();
+        var chapter = unitOfWork.Chapter.BuildQuery(c => c.ChapterId == lesson.ChapterId).FirstOrDefault();
+        var course = unitOfWork.Course.BuildQuery(c => c.CourseId == chapter.CourseId).FirstOrDefault();
+
+        return new CourseViewModel
+        {
+            CourseId = course.CourseId,
+            Title = course.Title,
+            Description = course.Description,
+            FullDescription = course.FullDescription,
+            Level = course.Level,
+            Duration = course.Duration,
+            Language = course.Language,
+            ThumbnailUrl = course.ThumbnailUrl,
+            Price = course.Price,
+            IsFree = course.IsFree,
+            AuthorName = course.AuthorName,
+            CategoryId = course.CategoryId,
+            CategoryName = unitOfWork.Category.BuildQuery(c => c.CategoryId == course.CategoryId).FirstOrDefault()?.Name
+        };
+
     }
 }

@@ -62,6 +62,7 @@ public abstract class GenericRepository<T> : IRepository<T> where T : class
         if (entity is BaseModel baseModel)
         {
             baseModel.SoftDelete();
+            baseModel.SetUpdated();
             context.Set<T>().Update(entity); // soft delete
         }
         else

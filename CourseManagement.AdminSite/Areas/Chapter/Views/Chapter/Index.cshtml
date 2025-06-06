@@ -13,17 +13,18 @@
             }">
         <thead>
         <tr>
-            <th>ChapterID</th>
-            <th>CourseID</th>
-            <th>Title</th>
+            <th>Order Number</th>
+            <th>Course</th>
+            <th>Chapter Title</th>
             <th>Description</th>
-            <th>OrderNumber</th>
+            <th>Actions</th>
         </tr>
         </thead>
         <tbody></tbody>
     </table>
 </div>
 
+<partial name="Partials/_DeleteModal"/>
 
 @section Scripts
 {
@@ -35,13 +36,58 @@
                 "datatype": "json"
             },
             "columns": [
-                {"data": "chapterId"},          // chapterId
-                {"data": "courseId"},
-                {"data": "title"},// courseId
-                {"data": "description"},        // description
-                {"data": "orderNumber"},       // orderNumber
-                          // title
+                {"data": "orderNumber"},
+                {"data": "courseTitle"},
+                {"data": "title"},
+                {"data": "description"},
+                {
+                    "data": null,
+                    "render": function (data, type, row) {
+                        return `
+                                <div class="flex flex-row justify-between items-center space-x-2">
+                                    <a href="/Chapter/Chapter/EditChapter/${row.chapterId}"
+                                       style="font-size: 25px; color: Dodgerblue;"
+                                       class="text-decoration-none hover:text-blue-700 transition-colors duration-200"
+                                       title="Edit">
+                                        <i class="fa fa-pen"></i>
+                                    </a>
+                                    <a href="#"
+                                       class="hover:text-red-600 transition-colors duration-200"
+                                       data-bs-toggle="modal" 
+                                       data-bs-target="#delete-conform"
+                                       data-course-id="${row.chapterId}"
+                                       style="font-size: 25px; color: tomato;"
+                                       title="Delete">
+                                        <i class="fa fa-trash"></i>
+                                    </a>
+                                </div>
+                                `;
+                    },
+                }
             ]
+        });
+
+        $('#delete-conform').on('show.bs.modal', function (event) {
+            const button = $(event.relatedTarget); // Nút vừa click
+            const courseId = button.data('course-id');
+            $('#btnConfirmDelete').data('course-id', courseId);
+        });
+
+        $('#btnConfirmDelete').on('click', function () {
+            var courseId = $(this).data('course-id');
+            if (!courseId) return;
+            // Gọi AJAX để xóa
+            $.ajax({
+                url: '@Url.Action("DeleteChapter", "Chapter")/' + courseId,
+                type: 'POST',
+                success: function (result) {
+                    // Xóa thành công: reload hoặc xóa dòng khỏi table bằng JS
+                    location.reload();
+                },
+                error: function () {
+                    alert('Delete failed!');
+                }
+            });
         });
     </script>
 }

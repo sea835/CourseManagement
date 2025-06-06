@@ -1,6 +1,6 @@
 ﻿<h2>Lessons</h2>
 <hr>
-<a href="@Url.Action("CreateCategory", "Category")"
+<a href="@Url.Action("CreateLesson", "Lesson", new { area = "Lesson" })"
    class="btn btn-success btn-lg rounded-pill d-inline-flex align-items-center gap-2 shadow-lg custom-create-btn"
    style="font-weight: 600; letter-spacing: 0.5px;">
     <i class="fa-solid fa-plus fa-lg"></i> Create Lesson
@@ -13,13 +13,14 @@
             }">
         <thead>
         <tr>
-            <th>LessonId</th>
-            <th>ChapterId</th>
-            <th>Title</th>
             <th>OrderNumber</th>
+            <th>Course</th>
+            <th>Chapter</th>
+            <th>Title</th>
             <th>LessonType</th>
             <th>Duration</th>
             <th>IsPreviewable</th>
+            <th>Actions</th>
         </tr>
         </thead>
         <tbody></tbody>
@@ -37,14 +38,62 @@
                 "datatype": "json"
             },
             "columns": [
-                {"data": "lessonId"},            // lessonId
-                {"data": "chapterId"},           // chapterId
-                {"data": "title"},               // title
                 {"data": "orderNumber"},         // orderNumber
+                {"data": "courseTitle"},            // lessonId
+                {"data": "chapterTitle"},           // chapterId
+                {"data": "title"},               // title
                 {"data": "lessonType"},          // lessonType
                 {"data": "duration"},            // duration
-                {"data": "isPreviewable"}        // isPreviewable
+                {"data": "isPreviewable"},     // isPreviewable
+                {
+                    "data": null,
+                    "render": function (data, type, row) {
+                        return `
+                                <div class="flex flex-row justify-between items-center space-x-2">
+                                    <a href="/Lesson/Lesson/EditLesson/${row.lessonId}"
+                                       style="font-size: 25px; color: Dodgerblue;"
+                                       class="text-decoration-none hover:text-blue-700 transition-colors duration-200"
+                                       title="Edit">
+                                        <i class="fa fa-pen"></i>
+                                    </a>
+                                    <a href="#"
+                                       class="hover:text-red-600 transition-colors duration-200"
+                                       data-bs-toggle="modal" 
+                                       data-bs-target="#delete-conform"
+                                       data-course-id="${row.lessonId}"
+                                       style="font-size: 25px; color: tomato;"
+                                       title="Delete">
+                                        <i class="fa fa-trash"></i>
+                                    </a>
+                                </div>
+                                `;
+                    },
+                }
             ]
+        });
+
+        $('#delete-conform').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget); // Nút vừa click
+            var courseId = button.data('course-id');
+            // Gán id vào nút xác nhận trong modal
+            $('#btnConfirmDelete').data('course-id', courseId);
+        });
+
+        $('#btnConfirmDelete').on('click', function () {
+            var courseId = $(this).data('course-id');
+            if (!courseId) return;
+            // Gọi AJAX để xóa
+            $.ajax({
+                url: '@Url.Action("DeleteLesson", "Lesson")/' + courseId,
+                type: 'POST',
+                success: function (result) {
+                    // Xóa thành công: reload hoặc xóa dòng khỏi table bằng JS
+                    location.reload();
+                },
+                error: function () {
+                    alert('Delete failed!');
+                }
+            });
         });
     </script>
 }

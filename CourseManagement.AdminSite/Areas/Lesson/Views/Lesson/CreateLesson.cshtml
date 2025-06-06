@@ -1,0 +1,139 @@
+﻿@model CourseManagement.Core.ViewModels.LessonViewModel
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="mb-4">
+                <a href="javascript:history.back()" class="btn btn-outline-secondary rounded-pill">
+                    <i class="fas fa-arrow-left me-2"></i> Back
+                </a>
+            </div>
+            <div class="card shadow-lg rounded-4 border-0">
+                <div class="card-header bg-primary text-white rounded-top-4">
+                    <h2 class="mb-0 fw-bold"><i class="fas fa-plus-circle me-2"></i>Create New Lesson</h2>
+                </div>
+                <div class="card-body p-4">
+                    <form asp-action="CreateLesson" method="post" enctype="multipart/form-data" autocomplete="off">
+                        <div class="mb-3">
+                            <label asp-for="Title" class="form-label fw-semibold"></label>
+                            <input asp-for="Title" class="form-control form-control-lg shadow-sm" placeholder="Lesson title..."/>
+                            <span asp-validation-for="Title" class="text-danger small"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="LessonType" class="form-label fw-semibold"></label>
+                            <input asp-for="LessonType" class="form-control shadow-sm" rows="3" placeholder="Lesson description"></input>
+                            <span asp-validation-for="LessonType" class="text-danger small"></span>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="OrderNumber" class="form-label fw-semibold">Order</label>
+                                <input asp-for="OrderNumber" type="number" class="form-control shadow-sm" min="1" placeholder="Lesson order"/>
+                                <span asp-validation-for="OrderNumber" class="text-danger small"></span>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="Duration" class="form-label fw-semibold"></label>
+                                <input asp-for="Duration" type="number" class="form-control shadow-sm" min="1" placeholder="Duration in minutes"/>
+                                <span asp-validation-for="Duration" class="text-danger small"></span>
+                            </div>
+                        </div>
+
+                        <div class="mb-3 d-flex align-items-center">
+                            <div class="form-check">
+                                <input asp-for="IsPreviewable" type="checkbox" class="form-check-input" id="isFreeCheck"/>
+                                <label asp-for="IsPreviewable" class="form-check-label ms-2">Is Free</label>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label class="form-label fw-semibold">Course</label>
+                            <select class="form-control shadow rounded-3 border-0 px-3 py-2" id="Course">
+                            </select>
+                            <span asp-validation-for="ChapterId" class="text-danger small"></span>
+                        </div>
+
+                        <div class="mb-4">
+                            <label asp-for="ChapterId" class="form-label fw-semibold">Chapter</label>
+                            <select asp-for="ChapterId" class="form-control shadow rounded-3 border-0 px-3 py-2" id="Chapter">
+                            </select>
+                            <span asp-validation-for="ChapterId" class="text-danger small"></span>
+                        </div>
+
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary btn-lg rounded-pill shadow-sm hover-scale">
+                                <i class="fas fa-save me-2"></i>Create Lesson
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        document.querySelectorAll('.hover-scale').forEach(btn => {
+            btn.onmouseenter = () => btn.classList.add('scale-up');
+            btn.onmouseleave = () => btn.classList.remove('scale-up');
+        });
+        
+        $("#Course").select2({
+            placeholder: "Select a course",
+            ajax: {
+                url: '@Url.Action("GetAllCoursesSelect2", "Course", new { area = "Course" })',
+                dataType: 'json',
+                delay: 250,
+                data: function (params) {
+                    return {
+                        searchTerm: params.term
+                    };
+                },
+                processResults: function (data) {
+                    return {
+                        results: data.results.data
+                    };
+                },
+                cache: true
+            },
+        });
+
+        $('#Course').on('change', function () {
+            // Xóa Chapter hiện tại
+            $('#Chapter').val(null).trigger('change');
+        });
+
+        $("#Chapter").select2({
+            placeholder: "Select a chapter",
+            ajax: {
+                url: '@Url.Action("GetAllChaptersByCourseIdSelect2", "Chapter", new { area = "Chapter" })',
+                dataType: 'json',
+                delay: 250,
+                data: function (params) {
+                    return {
+                        searchTerm: params.term,
+                        courseId: $('#Course').val()
+                    };
+                },
+                processResults: function (data) {
+                    return {
+                        results: data.data
+                    };
+                },
+                cache: true
+            },
+        });
+    </script>
+    <style>
+        .hover-scale { transition: transform 0.15s cubic-bezier(.4,0,.2,1); }
+        .hover-scale.scale-up { transform: scale(1.06); box-shadow: 0 8px 24px rgba(80,80,200,0.13); }
+        .card { transition: box-shadow .2s; }
+        .card:hover { box-shadow: 0 8px 32px rgba(80,80,200,0.14); }
+        .form-control:focus { box-shadow: 0 0 6px 1px #4299e1; border-color: #4299e1; }
+        .form-check-input:focus { box-shadow: 0 0 0 0.2rem rgba(66,153,225,.25); }
+        .btn-primary { background: linear-gradient(90deg,#4299e1 0,#2462c7 100%); border: none; }
+        .btn-primary:hover, .btn-primary:focus { background: linear-gradient(90deg,#2462c7 0,#4299e1 100%); }
+    </style>
+}

@@ -18,7 +18,25 @@ public class LessonService: ILessonService
     {
         try
         {
-            var result = unitOfWork.Lesson.GetAll();
+            var lessons = unitOfWork.Lesson.GetAll().ToList();
+            var courses = unitOfWork.Course.GetAll().ToList();
+            var chapters = unitOfWork.Chapter.GetAll().ToList();
+            var result = 
+                from lesson in lessons
+                join chapter in chapters on lesson.ChapterId equals chapter.ChapterId
+                join course in courses on chapter.CourseId equals course.CourseId
+                select new LessonViewModel
+                {
+                    LessonId = lesson.LessonId,
+                    Title = lesson.Title,
+                    OrderNumber = lesson.OrderNumber,
+                    ChapterId = lesson.ChapterId,
+                    Duration = lesson.Duration,
+                    LessonType = lesson.LessonType,
+                    IsPreviewable = lesson.IsPreviewable,
+                    ChapterTitle = chapter.Title,
+                    CourseTitle = course.Title
+                };
             return ResultViewModel.Success("Get all lessons successfully", result);
         }
         catch (Exception ex)
@@ -40,16 +58,30 @@ public class LessonService: ILessonService
         }
     }
     
-    public ResultViewModel GetLessonById(string id)
+    public LessonViewModel GetLessonById(string id)
     {
         try
         {
-            var result = unitOfWork.Lesson.GetById(id);
-            return ResultViewModel.Success("Get lesson by id successfully", result);
+            var lesson = unitOfWork.Lesson.BuildQuery(l => l.LessonId == id).FirstOrDefault();
+            var chapter = unitOfWork.Chapter.BuildQuery(c => c.ChapterId == lesson.ChapterId).FirstOrDefault();
+            var course = unitOfWork.Course.BuildQuery(c => c.CourseId == chapter.CourseId).FirstOrDefault();
+            var lessonViewModel = new LessonViewModel
+            {
+                LessonId = lesson.LessonId,
+                Title = lesson.Title,
+                OrderNumber = lesson.OrderNumber,
+                ChapterId = lesson.ChapterId,
+                Duration = lesson.Duration,
+                LessonType = lesson.LessonType,
+                IsPreviewable = lesson.IsPreviewable,
+                ChapterTitle = chapter.Title,
+                CourseTitle = course.Title
+            };
+            return lessonViewModel;
         }
         catch (Exception ex)
         {
-            return ResultViewModel.FailException(ex);
+            throw new Exception(ex.Message);
         }
     }
     
@@ -57,6 +89,14 @@ public class LessonService: ILessonService
     {
         try
         {
+            var existingLesson = unitOfWork.Lesson.BuildQuery(l => l.LessonId == lesson.LessonId).FirstOrDefault();
+            existingLesson.LessonId = lesson.LessonId;
+            existingLesson.Title = lesson.Title;
+            existingLesson.OrderNumber = lesson.OrderNumber;
+            existingLesson.ChapterId = lesson.ChapterId;
+            existingLesson.Duration = lesson.Duration;
+            existingLesson.LessonType = lesson.LessonType;
+            existingLesson.IsPreviewable = lesson.IsPreviewable;
             unitOfWork.Lesson.Update(lesson);
             return ResultViewModel.Success("Update lesson by id successfully");
         }

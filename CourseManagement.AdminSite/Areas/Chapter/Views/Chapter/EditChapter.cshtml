@@ -83,13 +83,19 @@
         
         // Initialize with current value
         $(document).ready(function() {
-            var courseId = "@Model.CourseId";
-            var courseTitle = "@Model.Title";
-            
-            if (courseId) {
-                var option = new Option(courseTitle, courseId, true, true);
-                $('#Course').append(option).trigger('change');
-            }
+            const courseId = "@Model.CourseId";
+            $.ajax({
+                url: '@Url.Action("GetCourseById", "Course", new { area = "Course" })',
+                type: 'GET',
+                data: { id: courseId },
+                success: function (data) {
+                    // console.log(data)
+                    if (data) {
+                        var option = new Option(data.title, data.courseId, true, true);
+                        $('#Course').append(option).trigger('change');
+                    }
+                }
+            });
         });
     </script>
     <style>

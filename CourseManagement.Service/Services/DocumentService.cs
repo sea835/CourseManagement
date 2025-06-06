@@ -66,15 +66,14 @@ public class DocumentService: IDocumentService
     {
         try
         {
-            if (document == null)
-            {
-                return ResultViewModel.Fail("Document cannot be null");
-            }
-            var existingDocument = unitOfWork.Document.GetById(document.DocumentId);
-            if (existingDocument == null)
-            {
-                return ResultViewModel.Fail("Document not found");
-            }
+            var existingDocument = unitOfWork.Document.BuildQuery(d=> d.DocumentId == document.DocumentId).FirstOrDefault();
+            existingDocument.Title = document.Title;
+            existingDocument.DocumentId = document.DocumentId;
+            existingDocument.FilePath = document.FilePath;
+            existingDocument.FileType = document.FileType;
+            existingDocument.LessonId = document.LessonId;
+            existingDocument.SizeInBytes = document.SizeInBytes;
+            existingDocument.SetUpdated();
             unitOfWork.Document.Update(document);
             unitOfWork.SaveChange();
             return ResultViewModel.Success("Document updated successfully", document);

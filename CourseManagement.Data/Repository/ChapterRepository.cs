@@ -8,9 +8,10 @@ public class ChapterRepository: GenericRepository<Chapter>, IChapterRepository
 {
     public ChapterRepository(AppDbContext context) : base(context) { }
 
-    public IEnumerable<Chapter> GetChaptersByCourseId(string courseId)
+    public IEnumerable<Chapter> GetAllChaptersByCourseId(string courseId)
     {
-        return context.Chapters
-            .Where(chapter => chapter.CourseId == courseId);
+        var chapters = context.Chapters
+            .Where(chapter => chapter.CourseId == courseId).AsEnumerable();
+        return chapters;
     }
 }
