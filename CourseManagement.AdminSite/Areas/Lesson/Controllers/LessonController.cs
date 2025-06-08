@@ -72,4 +72,9 @@ public class LessonController: Controller
         return Json(new { success = true, message = "Lesson deleted successfully." });
     }
     
+    public IActionResult ViewLessonContent(string id)
+    {
+        // var content = lessonService.GetContentByLessonId(id);
+        return View();
+    }
 }

@@ -19,7 +19,6 @@
             <th>Title</th>
             <th>LessonType</th>
             <th>Duration</th>
-            <th>IsPreviewable</th>
             <th>Actions</th>
         </tr>
         </thead>
@@ -44,7 +43,6 @@
                 {"data": "title"},               // title
                 {"data": "lessonType"},          // lessonType
                 {"data": "duration"},            // duration
-                {"data": "isPreviewable"},     // isPreviewable
                 {
                     "data": null,
                     "render": function (data, type, row) {
@@ -54,6 +52,12 @@
                                        style="font-size: 25px; color: Dodgerblue;"
                                        class="text-decoration-none hover:text-blue-700 transition-colors duration-200"
                                        title="Edit">
+                                        <i class="fa fa-pen"></i>
+                                    </a>
+                                    <a href="/Lesson/Lesson/ViewLessonContent/${row.lessonId}"
+                                       style="font-size: 25px; color: Dodgerblue;"
+                                       class="text-decoration-none hover:text-blue-700 transition-colors duration-200"
+                                       >
                                         <i class="fa fa-pen"></i>
                                     </a>
                                     <a href="#"
