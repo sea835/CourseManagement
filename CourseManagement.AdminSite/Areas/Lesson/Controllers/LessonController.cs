@@ -69,4 +69,10 @@ public class LessonController(ILessonService lessonService, ILessonContentServic
         var content = contentService.GetContentByLessonId(id);
         return View(content);
     }
+
+    public IActionResult GetAllLessonsByChapterIdSelect2(string chapterId)
+    {
+        var lessons = lessonService.GetAllLessonsByChapterIdSelect2(chapterId);
+        return Json(new {data = lessons});
+    }
 }

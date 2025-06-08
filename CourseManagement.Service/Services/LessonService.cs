@@ -118,5 +118,31 @@ public class LessonService: ILessonService
             return ResultViewModel.FailException(ex);
         }
     }
-    
+
+    public IEnumerable<LessonViewModel> GetAllLessonsByChapterId(string chapterId)
+    {
+        var lessons = unitOfWork.Lesson.GetAll().ToList().Select(l => new LessonViewModel
+        {
+            LessonId = l.LessonId,
+            Title = l.Title,
+            OrderNumber = l.OrderNumber,
+            ChapterId = l.ChapterId,
+            Duration = l.Duration,
+            LessonType = l.LessonType,
+            IsPreviewable = l.IsPreviewable,
+        }).Where(l => l.ChapterId == chapterId).ToList();
+        return lessons;
+    }
+
+    public IEnumerable<Select2ViewModel> GetAllLessonsByChapterIdSelect2(string chapterId)
+    {
+        var lessons = unitOfWork.Lesson.GetAll().ToList()
+            .Where(l => l.ChapterId == chapterId)
+            .Select(l => new Select2ViewModel()
+        {
+            Id = l.LessonId,
+            Text = l.Title,
+        }).ToList();
+        return lessons;
+    }
 }

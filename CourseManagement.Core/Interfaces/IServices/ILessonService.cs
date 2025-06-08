@@ -10,4 +10,6 @@ public interface ILessonService
     public ResultViewModel UpdateLesson(Lesson lesson);
     public ResultViewModel CreateLesson(Lesson lesson);
     public ResultViewModel GetAllLessons();
+    public IEnumerable<LessonViewModel> GetAllLessonsByChapterId(string chapterId);
+    public IEnumerable<Select2ViewModel> GetAllLessonsByChapterIdSelect2(string chapterId);
 }
