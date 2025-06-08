@@ -1,13 +1,15 @@
-﻿using CourseManagement.Core.Models;
-using CourseManagement.Core.ViewModels;
+﻿using CourseManagement.Core.ViewModels;
 
-namespace CourseManagement.Core.Interfaces.IServices;
-
-public interface IVideoService
+namespace CourseManagement.Core.Interfaces.IServices
 {
-    public ResultViewModel UpdateVideo(Video video);
-    public ResultViewModel CreateVideo(Video video);
-    public ResultViewModel DeleteVideo(string id);
-    public ResultViewModel GetVideoById(string id);
-    public ResultViewModel GetAllVideos();
+    public interface IVideoService
+    {
+        Task<IEnumerable<VideoViewModel>> GetAllVideos();
+        Task<VideoViewModel> GetById(string id);
+        Task Create(VideoViewModel video);
+        Task Update(VideoViewModel video);
+        Task Delete(string id);
+        Task Restore(string id);
+        IEnumerable<VideoViewModel> GetByLessonId(string lessonId);
+    }
 }

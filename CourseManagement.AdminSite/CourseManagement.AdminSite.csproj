@@ -13,6 +13,7 @@
         <PrivateAssets>all</PrivateAssets>
       </PackageReference>
       <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="7.0.0" />
+      <PackageReference Include="Xabe.FFmpeg" Version="6.0.1" />
     </ItemGroup>
 
     <ItemGroup>
@@ -24,6 +25,10 @@
       <ProjectReference Include="..\CourseManagement.Core\CourseManagement.Core.csproj" />
       <ProjectReference Include="..\CourseManagement.Data\CourseManagement.Data.csproj" />
       <ProjectReference Include="..\CourseManagement.Service\CourseManagement.Service.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="wwwroot\videos\" />
     </ItemGroup>
 
 </Project>

@@ -1,20 +1,12 @@
 ﻿using CourseManagement.Core.Interfaces.IServices;
-using CourseManagement.Core.Interfaces.IServices;
 using CourseManagement.Core.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CourseManagement.AdminSite.Areas.Lesson.Controllers;
 
 [Area("Lesson")]
-public class LessonController: Controller
+public class LessonController(ILessonService lessonService, ILessonContentService contentService): Controller
 {
-    private readonly ILessonService lessonService;
-    
-    public LessonController(ILessonService lessonService)
-    {
-        this.lessonService = lessonService;
-    }
-    
     public IActionResult Index()
     {
         return View();
@@ -74,7 +66,7 @@ public class LessonController: Controller
     
     public IActionResult ViewLessonContent(string id)
     {
-        // var content = lessonService.GetContentByLessonId(id);
-        return View();
+        var content = contentService.GetContentByLessonId(id);
+        return View(content);
     }
 }

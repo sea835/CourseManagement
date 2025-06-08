@@ -1,0 +1,34 @@
+﻿@model CourseManagement.Core.ViewModels.VideoViewModel
+
+@{
+    ViewData["Title"] = "Tạo video mới";
+}
+
+<h2 class="mb-4">Tạo video mới</h2>
+
+<form asp-action="UploadAndCreateVideo" asp-controller="Video" asp-area="Video" enctype="multipart/form-data" method="post">
+    <input type="hidden" asp-for="LessonId" />
+
+    <div class="mb-3">
+        <label asp-for="Title" class="form-label">Tiêu đề video</label>
+        <input asp-for="Title" class="form-control" />
+        <span asp-validation-for="Title" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Duration" class="form-label">Thời lượng (giây)</label>
+        <input asp-for="Duration" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Provider" class="form-label">Nguồn cung cấp</label>
+        <input asp-for="Provider" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Upload video (.mp4)</label>
+        <input type="file" name="videoFile" class="form-control" accept="video/*" />
+    </div>
+
+    <button type="submit" class="btn btn-primary">Tải lên & Lưu</button>
+</form>

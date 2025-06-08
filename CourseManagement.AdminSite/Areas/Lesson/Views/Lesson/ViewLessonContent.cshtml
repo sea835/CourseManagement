@@ -20,12 +20,6 @@
         margin-bottom: 2rem;
         color: white;
         box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-
-    .lesson-header:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
     }
 
     .content-card {
@@ -44,11 +38,6 @@
         transform: translateY(0);
     }
 
-    .content-card:hover {
-        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
-        transform: translateY(-5px);
-    }
-
     .card-title {
         font-size: 1.5rem;
         font-weight: 600;
@@ -58,7 +47,7 @@
         border-bottom: 2px solid #f0f0f0;
     }
 
-    .card-content {
+    .card-content, .summary-section {
         font-size: 1.1rem;
         line-height: 1.7;
         color: #444;
@@ -69,13 +58,7 @@
         border-left: 4px solid #a777e3;
         padding: 1.5rem;
         border-radius: 0 10px 10px 0;
-        margin-top: 2rem;
-        transition: all 0.3s ease;
-    }
-
-    .summary-section:hover {
-        background-color: #f0ebff;
-        transform: translateX(5px);
+        margin-top: 0.5rem;
     }
 
     .back-button {
@@ -88,7 +71,6 @@
         text-decoration: none;
         font-weight: 600;
         margin-top: 1rem;
-        transition: all 0.3s ease;
         border: none;
         cursor: pointer;
     }
@@ -99,12 +81,8 @@
         box-shadow: 0 5px 15px rgba(110, 142, 251, 0.4);
     }
 
-    .back-button i {
-        margin-right: 0.5rem;
-    }
-
     .content-placeholder {
-        height: 400px;
+        height: 300px;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -122,13 +100,26 @@
         animation: spin 1s linear infinite;
         margin: 2rem auto;
     }
-    
+
+    .editable[contenteditable="true"] {
+        border: 1px dashed #ccc;
+        background: #fdfdfd;
+    }
+
+    .btn-sm {
+        padding: 0.3rem 0.7rem;
+        font-size: 0.85rem;
+        margin-right: 0.3rem;
+    }
 </style>
 
+<a href="javascript:history.back()" class="back-button">
+    <i class="fas fa-arrow-left"></i> Quay lại
+</a>
+
 <div class="lesson-content-container">
-    <div class="lesson-header animate__animated animate__fadeIn">
+    <div class="lesson-header">
         <h1 id="lessonTitle">Đang tải nội dung bài học...</h1>
-        <p id="lessonDescription" class="mt-2">Vui lòng đợi trong giây lát</p>
     </div>
 
     <div id="contentContainer">
@@ -136,124 +127,183 @@
             <div class="loader"></div>
         </div>
     </div>
-
-    <a href="javascript:history.back()" class="back-button">
-        <i class="fas fa-arrow-left"></i> Quay lại
-    </a>
 </div>
 
 @section Scripts {
     <script>
         $(document).ready(function () {
-            // Get lessonId from URL
-            
+            const lessonId = '@Model.LessonId';
+
             if (!lessonId) {
                 showError("Không tìm thấy thông tin bài học");
                 return;
             }
 
-            // Get lesson details (title, description)
-            $.ajax({
-                url: '@Url.Action("GetLessonById", "Lesson")', // Update the URL as needed
-                type: 'GET',
-                data: {id: lessonId},
-                success: function (response) {
-                    if (response.success) {
-                        // Update UI with lesson details
-                        $("#lessonTitle").text(response.data.name);
-                        $("#lessonDescription").text(response.data.description);
+            $.get('@Url.Action("GetLessonById", "Lesson")', { id: lessonId })
+                .done(function (res) {
+                    if (res && res.data) {
+                        $("#lessonTitle").text(res.data.title);
                     } else {
                         showError("Không thể tải thông tin bài học");
                     }
-                },
-                error: function () {
+                })
+                .fail(function () {
                     showError("Không thể tải thông tin bài học");
-                }
-            });
+                });
 
-            // Get lesson content (main content, summary)
-            $.ajax({
-                url: '@Url.Action("GetContentByLessonId", "LessonContent", new { area = "LessonContent" })', // Update the URL as needed
-                type: 'GET',
-                data: {id: lessonId},
-                success: function (response) {
-                    if (response.success) {
-                        renderContent(response);
-                    } else {
-                        showNoContent();
-                    }
-                },
-                error: function () {
+            $.get('@Url.Action("GetContentByLessonId", "LessonContent", new { area = "LessonContent" })', { id: lessonId })
+                .done(function (res) {
+                    if (res) renderContent(res);
+                    else showNoContent();
+                })
+                .fail(function () {
                     showError("Không thể tải nội dung bài học");
-                }
-            });
+                });
 
-            // Render content into the page
             function renderContent(contentData) {
                 const container = $("#contentContainer");
                 container.empty();
 
-                // Main content
-                const mainContentCard = $('<div class="content-card">')
-                    .append('<h2 class="card-title">Nội dung bài học</h2>')
-                    .append('<div class="card-content">' + contentData.mainContent + '</div>');
+                const sections = [
+                    { label: "Tóm tắt", type: "summary", content: contentData.summary || "Chưa có nội dung" },
+                    { label: "Nội dung bài học", type: "mainContent", content: contentData.mainContent || "Chưa có nội dung" },
+                    { label: "Tài liệu đính kèm", type: "document", content: "Chưa có nội dung" },
+                    { label: "Video bài học", type: "video", content: "Chưa có nội dung" }
+                ];
 
-                container.append(mainContentCard);
-
-                // If summary exists, render the summary section
-                if (contentData.summary && contentData.summary.trim() !== '') {
-                    const summarySection = $('<div class="content-card">')
-                        .append('<h2 class="card-title">Tóm tắt</h2>')
-                        .append('<div class="summary-section">' + contentData.summary + '</div>');
-
-                    container.append(summarySection);
-                }
-
-                // Apply animations to the content cards with a delay
-                setTimeout(function () {
-                    $(".content-card").each(function (index) {
-                        const card = $(this);
-                        setTimeout(function () {
-                            card.addClass("animated");
-                        }, index * 200);
-                    });
-                }, 200);
+                sections.forEach(section => {
+                    const html = `
+                        <div class="content-card animated">
+                            <h2 class="card-title">${section.label}</h2>
+                            <div class="card-content editable" 
+                                 data-type="${section.type}" 
+                                 contenteditable="false">${section.content}</div>
+                            <div class="mt-2">
+                                <button class="btn btn-sm btn-primary btn-edit" data-type="${section.type}">Edit</button>
+                                <button class="btn btn-sm btn-success btn-save d-none" data-type="${section.type}">Save</button>
+                                <button class="btn btn-sm btn-danger btn-delete d-none" data-type="${section.type}">Delete</button>
+                                <button class="btn btn-sm btn-secondary btn-cancel d-none" data-type="${section.type}">Cancel</button>
+                            </div>
+                        </div>`;
+                    container.append(html);
+                });
             }
 
-            // Show no content placeholder
             function showNoContent() {
-                const container = $("#contentContainer");
-                container.empty();
-
-                container.append(
-                    $('<div class="content-card animated">')
-                        .append('<div class="content-placeholder">')
-                        .find('.content-placeholder')
-                        .append('<p>Chưa có nội dung cho bài học này</p>')
-                        .end()
-                );
+                $("#contentContainer").html(`
+                    <div class="content-card animated">
+                        <div class="content-placeholder"><p>Chưa có nội dung cho bài học này</p></div>
+                    </div>
+                `);
             }
 
-            // Show error message
             function showError(message) {
-                const container = $("#contentContainer");
-                container.empty();
-
-                container.append(
-                    $('<div class="content-card animated">')
-                        .append('<div class="content-placeholder text-danger">')
-                        .find('.content-placeholder')
-                        .append('<p><i class="fas fa-exclamation-circle me-2"></i> ' + message + '</p>')
-                        .end()
-                );
-
-                $("#lessonTitle").text("Có lỗi xảy ra");
-                $("#lessonDescription").text("");
+                $("#contentContainer").html(`
+                    <div class="content-card animated">
+                        <div class="content-placeholder text-danger">
+                            <p><i class="fas fa-exclamation-circle me-2"></i> ${message}</p>
+                        </div>
+                    </div>
+                `);
+                $("#lessonTitle").text("Lỗi");
             }
 
-            
+            $(document).on("click", ".btn-edit", function () {
+                const type = $(this).data("type");
+                const editable = $(`.editable[data-type="${type}"]`);
+                editable.attr("contenteditable", "true").focus();
 
+                // Lưu giá trị ban đầu
+                editable.data("original", editable.html());
+
+                $(this).addClass("d-none");
+                $(`.btn-save[data-type="${type}"], .btn-delete[data-type="${type}"], .btn-cancel[data-type="${type}"]`).removeClass("d-none");
+            });
+
+            $(document).on("click", ".btn-cancel", function () {
+                const type = $(this).data("type");
+                const editable = $(`.editable[data-type="${type}"]`);
+                const original = editable.data("original");
+
+                // Khôi phục nội dung
+                editable.html(original).attr("contenteditable", "false");
+
+                // Ẩn Save/Delete/Cancel, hiện Edit
+                $(`.btn-save[data-type="${type}"], .btn-delete[data-type="${type}"], .btn-cancel[data-type="${type}"]`).addClass("d-none");
+                $(`.btn-edit[data-type="${type}"]`).removeClass("d-none");
+            });
+
+            $(document).on("click", ".btn-save", function () {
+                const type = $(this).data("type");
+                const editable = $(`.editable[data-type="${type}"]`);
+                const newValue = editable.html();
+
+                console.log("Saving:", type, newValue); // Thay bằng gọi API thực tế nếu cần
+
+                editable.attr("contenteditable", "false");
+                $(`.btn-save[data-type="${type}"], .btn-delete[data-type="${type}"], .btn-cancel[data-type="${type}"]`).addClass("d-none");
+                $(`.btn-edit[data-type="${type}"]`).removeClass("d-none");
+            });
+
+            $(document).on("click", ".btn-delete", function () {
+                const type = $(this).data("type");
+                const editable = $(`.editable[data-type="${type}"]`);
+                editable.html("[Đã xóa]").attr("contenteditable", "false");
+
+                $(`.btn-save[data-type="${type}"], .btn-delete[data-type="${type}"], .btn-cancel[data-type="${type}"]`).addClass("d-none");
+                $(`.btn-edit[data-type="${type}"]`).removeClass("d-none");
+            });
+        });
+        $(document).on("click", ".btn-save", function () {
+            const type = $(this).data("type");
+            const editable = $(`.editable[data-type="${type}"]`);
+            const newValue = editable.html().trim();
+            const lessonId = '@Model.LessonId';
+
+            let url = "";
+            let payload = {};
+
+            switch (type) {
+                case "summary":
+                    url = "/LessonContent/LessonContent/UpdateSummary";
+                    payload = { id: lessonId, summary: newValue };
+                    break;
+                case "mainContent":
+                    url = "/LessonContent/LessonContent/UpdateMainContent";
+                    payload = { id: lessonId, mainContent: newValue };
+                    break;
+                // Nếu bạn sau này có UpdateDocument / UpdateVideo:
+                case "document":
+                    toastr.warning("Tính năng cập nhật tài liệu chưa được hỗ trợ.");
+                    return;
+                case "video":
+                    toastr.warning("Tính năng cập nhật video chưa được hỗ trợ.");
+                    return;
+                default:
+                    toastr.error("Loại nội dung không xác định.");
+                    return;
+            }
+
+            $.ajax({
+                url: url,
+                type: "POST",
+                data: payload,
+                success: function (res) {
+                    if (res.success) {
+                        toastr.success(res.message || "Cập nhật thành công");
+                        editable.attr("contenteditable", "false");
+                        $(`.btn-edit[data-type='${type}']`).removeClass("d-none");
+                        $(`.btn-save[data-type='${type}'], .btn-delete[data-type='${type}'], .btn-cancel[data-type='${type}']`).addClass("d-none");
+                    } else {
+                        toastr.error(res.message || "Cập nhật thất bại");
+                    }
+                },
+                error: function () {
+                    toastr.error("Lỗi máy chủ. Không thể cập nhật.");
+                }
+            });
         });
 
     </script>
 }
+    

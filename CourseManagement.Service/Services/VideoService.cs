@@ -3,79 +3,106 @@ using CourseManagement.Core.Models;
 using CourseManagement.Core.ViewModels;
 using CourseManagement.Data.UnitOfWork;
 
-namespace CourseManagement.Service.Services;
-
-public class VideoService: IVideoService
+namespace CourseManagement.Service.Services
 {
-    private readonly IUnitOfWork unitOfWork;
+    public class VideoService(IUnitOfWork unitOfWork) : IVideoService
+    {
+        public async Task<IEnumerable<VideoViewModel>> GetAllVideos()
+        {
+            var courses = unitOfWork.Course.GetAll().ToList();
+            var chapters = unitOfWork.Chapter.GetAll().ToList();
+            var lessons = unitOfWork.Lesson.GetAll().ToList();
+            var videos = unitOfWork.Video.GetAll().ToList();
+            var videoViewModels = (from video in videos
+                join lesson in lessons
+                    on video.LessonId equals lesson.LessonId into lessonGroup
+                from l in lessonGroup.DefaultIfEmpty()
+                join chapter in chapters
+                    on l?.ChapterId equals chapter.ChapterId into chapterGroup
+                from c in chapterGroup.DefaultIfEmpty()
+                join course in courses
+                    on c?.CourseId equals course.CourseId into courseGroup
+                from cr in courseGroup.DefaultIfEmpty()
+                select new VideoViewModel
+                {
+                    VideoId = video.VideoId,
+                    LessonId = video.LessonId,
+                    Title = video.Title,
+                    Url = video.Url,
+                    Duration = video.Duration,
+                    Provider = video.Provider,
+                    CreatedAt = video.CreatedAt,
+                    CourseTitle = cr?.Title,
+                    LessonTitle = l?.Title,
+                    ChapterTitle = c?.Title
+                }).ToList();
+            return videoViewModels;
+        }
 
-    public VideoService(IUnitOfWork unitOfWork)
-    {
-        this.unitOfWork = unitOfWork;
-    }
-    
-    public ResultViewModel UpdateVideo(Video video)
-    {
-        try
+        public async Task<VideoViewModel> GetById(string id)
         {
-            var result = unitOfWork.Video.Update(video);
-            return ResultViewModel.Success("Video updated successfully");
+            var v = unitOfWork.Video.GetById(id);
+            if (v == null) return null;
+            return new VideoViewModel {
+                VideoId = v.VideoId,
+                LessonId = v.LessonId,
+                Title = v.Title,
+                Url = v.Url,
+                Duration = v.Duration,
+                Provider = v.Provider,
+                CreatedAt = v.CreatedAt
+            };
         }
-        catch (Exception ex)
-        {
-            return ResultViewModel.FailException(ex);
-        }
-    }
-    
-    public ResultViewModel CreateVideo(Video video)
-    {
-        try
-        {
-            var result = unitOfWork.Video.Add(video);
-            return ResultViewModel.Success("Video updated successfully");
-        }
-        catch (Exception ex)
-        {
-            return ResultViewModel.FailException(ex);
-        }
-    }
-    
-    public ResultViewModel DeleteVideo(string id)
-    {
-        try
-        {
-            var result = unitOfWork.Video.Delete(id);
-            return ResultViewModel.Success("Video updated successfully");
-        }
-        catch (Exception ex)
-        {
-            return ResultViewModel.FailException(ex);
-        }
-    }
 
-    public ResultViewModel GetVideoById(string id)
-    {
-        try
+        public async Task Create(VideoViewModel model)
         {
-            var result = unitOfWork.Video.GetById(id);
-            return ResultViewModel.Success("Video updated successfully");
+            var v = new Video
+            {
+                VideoId = model.VideoId,
+                LessonId = model.LessonId,
+                Title = model.Title,
+                Url = model.Url,
+                Duration = model.Duration,
+                Provider = model.Provider
+            };
+            await unitOfWork.Video.Add(v);
         }
-        catch (Exception ex)
+
+        public async Task Update(VideoViewModel model)
         {
-            return ResultViewModel.FailException(ex);
+            var v = unitOfWork.Video.GetById(model.VideoId);
+            if (v == null) return;
+
+            v.Title = model.Title;
+            v.Url = model.Url;
+            v.Duration = model.Duration;
+            v.Provider = model.Provider;
+
+            await unitOfWork.Video.Update(v);
         }
-    }
-    
-    public ResultViewModel GetAllVideos()
-    {
-        try
+
+        public async Task Delete(string id)
         {
-            var result = unitOfWork.Video.GetAll();
-            return ResultViewModel.Success("Video updated successfully");
+            await unitOfWork.Video.Delete(id);
         }
-        catch (Exception ex)
+
+        public async Task Restore(string id)
         {
-            return ResultViewModel.FailException(ex);
+            await unitOfWork.Video.Restore(id);
+        }
+
+        public IEnumerable<VideoViewModel> GetByLessonId(string lessonId)
+        {
+            return unitOfWork.Video.BuildQuery(v => v.LessonId == lessonId)
+                        .Select(v => new VideoViewModel {
+                            VideoId = v.VideoId,
+                            LessonId = v.LessonId,
+                            Title = v.Title,
+                            Url = v.Url,
+                            Duration = v.Duration,
+                            Provider = v.Provider,
+                            CreatedAt = v.CreatedAt
+                        });
         }
     }
 }

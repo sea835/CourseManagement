@@ -1,6 +1,6 @@
 ﻿<h2>Videos</h2>
 <hr>
-<a href="@Url.Action("CreateCategory", "Category")"
+<a href="@Url.Action("CreateVideo", "Video")"
    class="btn btn-success btn-lg rounded-pill d-inline-flex align-items-center gap-2 shadow-lg custom-create-btn"
    style="font-weight: 600; letter-spacing: 0.5px;">
     <i class="fa-solid fa-plus fa-lg"></i> Create Video
@@ -14,9 +14,10 @@
         <thead>
         <tr>
             <th>VideoId</th>
-            <th>LessonId</th>
+            <th>Course</th>
+            <th>Chapter</th>
+            <th>Lesson</th>
             <th>Title</th>
-            <th>Url</th>
             <th>Duration</th>
             <th>Provider</th>
         </tr>
@@ -31,15 +32,16 @@
     <script>
         $("#video-table").DataTable({
             "ajax": {
-                "url": "@Url.Action("GetAllVideos")",  // Đảm bảo đường dẫn đúng
+                "url": "@Url.Action("GetAllVideos")",
                 "type": "GET",
                 "datatype": "json"
             },
             "columns": [
                 { "data": "videoId"},
-                { "data": "lessonId"},
+                { "data": "courseTitle"},
+                { "data": "chapterTitle"},
+                { "data": "lessonTitle"},
                 { "data": "title"},
-                { "data": "url"},
                 { "data": "duration"},
                 { "data": "provider"}
             ]
