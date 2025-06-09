@@ -1,0 +1,30 @@
+@model CourseManagement.Core.ViewModels.DocumentViewModel
+
+@{
+    ViewData["Title"] = "Edit Document";
+}
+<a href="javascript:history.back()" class="back-button">
+    <i class="fas fa-arrow-left pe-2"></i> Quay lại
+</a>
+<h2 class="mb-4">Edit Document</h2>
+
+<form asp-action="UploadAndCreateDocument" asp-controller="Document" asp-area="Document" enctype="multipart/form-data" method="post">
+    <input type="hidden" asp-for="DocumentId" />
+    <input type="hidden" asp-for="LessonId" />
+    <div class="mb-3">
+        <label asp-for="Title" class="form-label">Title</label>
+        <input asp-for="Title" class="form-control" />
+        <span asp-validation-for="Title" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Upload new document (optional)</label>
+        <input type="file" name="documentFile" class="form-control" />
+    </div>
+    <button type="submit" class="btn btn-primary">Save</button>
+</form>
+
+@section Scripts {
+    <style>
+        .back-button { display: inline-flex; align-items: center; padding: 0.75rem 1.5rem; background-color: #6e8efb; color: white; border-radius: 30px; text-decoration: none; font-weight: 600; margin-top: 1rem; border: none; cursor: pointer; }
+    </style>
+}
