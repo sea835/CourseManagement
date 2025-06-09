@@ -154,13 +154,13 @@
 
                     list.forEach(video => {
                         const videoHtml = `
-                <div class="mb-4">
-                    <h5>${video.title}</h5>
-                    <video controls width="100%" style="border-radius: 10px;">
-                        <source src="@Url.Action("StreamLessonVideo", "Video", new { area = "Video" })/${video.videoId}" type="video/mp4">
-                        Trình duyệt không hỗ trợ video HTML5.
-                    </video>
-                </div>
+                        <div class="mb-4">
+                            <h5>${video.title}</h5>
+                            <video controls width="100%" style="border-radius: 10px;">
+                                <source src="@Url.Action("StreamLessonVideo", "Video", new { area = "Video" })/${video.videoId}" type="video/mp4">
+                                Trình duyệt không hỗ trợ video HTML5.
+                            </video>
+                        </div>
             `;
                         container.append(videoHtml);
                     });

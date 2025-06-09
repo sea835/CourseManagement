@@ -47,9 +47,9 @@ namespace CourseManagement.AdminSite.Areas.Video.Controllers
             return View(video);
         }
         
-        public IActionResult GetVideosByLessonId(string id)
+        public IActionResult GetVideosByLessonId(string lessonId)
         {
-            var videos = videoService.GetAllVideosByLessonId(id);
+            var videos = videoService.GetAllVideosByLessonId(lessonId);
             return Json(new { data = videos });
         }
 
