@@ -1,38 +1,42 @@
+@{
+    var currentArea = ViewContext.RouteData.Values["area"]?.ToString();
+}
+
 ﻿<div id="sidebar" class="d-flex flex-column flex-shrink-0 p-3 text-white bg-dark" style="width: 280px;">
     <hr/>
     <ul class="nav nav-pills flex-column mb-auto">
         <li class="nav-item">
-            <a href="@Url.Action("Index", "Home", new { area = "" })" class="nav-link active" aria-current="page">
+            <a asp-area="" asp-controller="Home" asp-action="Index" class="nav-link text-white @(string.IsNullOrEmpty(currentArea) ? "active" : "")" aria-current="page">
                 <i class="fas fa-home me-2"></i> Home
             </a>
         </li>
         <li>
-            <a asp-area="Course" asp-controller="Course" asp-action="Index" class="nav-link text-white">
+            <a asp-area="Course" asp-controller="Course" asp-action="Index" class="nav-link text-white @(currentArea == "Course" ? "active" : "")">
                 <i class="fas fa-book me-2"></i> Courses
             </a>
         </li>
         <li>
-            <a asp-area="Category" asp-controller="Category" asp-action="Index" class="nav-link text-white">
+            <a asp-area="Category" asp-controller="Category" asp-action="Index" class="nav-link text-white @(currentArea == "Category" ? "active" : "")">
                 <i class="fas fa-th me-2"></i> Categories
             </a>
         </li>
         <li>
-            <a asp-area="Chapter" asp-controller="Chapter" asp-action="Index" class="nav-link text-white">
+            <a asp-area="Chapter" asp-controller="Chapter" asp-action="Index" class="nav-link text-white @(currentArea == "Chapter" ? "active" : "")">
                 <i class="fas fa-box me-2"></i> Chapters
             </a>
         </li>
         <li>
-            <a asp-area="Lesson" asp-controller="Lesson" asp-action="Index" class="nav-link text-white">
+            <a asp-area="Lesson" asp-controller="Lesson" asp-action="Index" class="nav-link text-white @(currentArea == "Lesson" ? "active" : "")">
                 <i class="fas fa-chalkboard-teacher me-2"></i> Lessons
             </a>
         </li>
         <li>
-            <a asp-area="Video" asp-controller="Video" asp-action="Index" class="nav-link text-white">
+            <a asp-area="Video" asp-controller="Video" asp-action="Index" class="nav-link text-white @(currentArea == "Video" ? "active" : "")">
                 <i class="fas fa-video me-2"></i> Videos
             </a>
         </li>
         <li>
-            <a asp-area="Document" asp-controller="Document" asp-action="Index" class="nav-link text-white">
+            <a asp-area="Document" asp-controller="Document" asp-action="Index" class="nav-link text-white @(currentArea == "Document" ? "active" : "")">
                 <i class="fas fa-file-alt me-2"></i> Documents
             </a>
         </li>
@@ -57,21 +61,3 @@
     </div>
 </div>
 
-@section Scripts
-{
-    <script>
-        $(document).ready(function () {
-            var currentPath = window.location.pathname.toLowerCase();
-
-            $("#sidebar .nav-link").each(function () {
-                var href = $(this).attr("href").toLowerCase();
-
-                if (href !== "#" && currentPath.startsWith(href)) {
-                    $("#sidebar .nav-link").removeClass("active");
-                    $(this).addClass("active");
-                    return false; // dừng vòng lặp khi đã tìm thấy
-                }
-            });
-        });
-    </script>
-}
