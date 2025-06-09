@@ -2,6 +2,10 @@
 using CourseManagement.Core.ViewModels;
 using CourseManagement.Data.UnitOfWork;
 using CourseManagement.Service.IServices;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.StaticFiles;
+using System.IO;
+using System.Threading.Tasks;
 
 namespace CourseManagement.Service.Services;
 
@@ -96,5 +100,74 @@ public class DocumentService: IDocumentService
         {
             return ResultViewModel.FailException(ex);
         }
+    }
+
+    public IEnumerable<DocumentViewModel> GetDocumentsByLessonId(string lessonId)
+    {
+        return unitOfWork.Document.BuildQuery(d => d.LessonId == lessonId)
+            .Select(d => new DocumentViewModel
+            {
+                DocumentId = d.DocumentId,
+                LessonId = d.LessonId,
+                Title = d.Title,
+                FilePath = d.FilePath,
+                FileType = d.FileType,
+                SizeInBytes = d.SizeInBytes,
+                CreatedAt = d.CreatedAt
+            }).ToList();
+    }
+
+    public async Task UploadAndCreateDocument(DocumentViewModel model, IFormFile documentFile, string rootPath, Action<string> setPathCallback)
+    {
+        if (documentFile == null || documentFile.Length == 0)
+            throw new Exception("No document file provided.");
+
+        var folder = Path.Combine(rootPath, "wwwroot/documents");
+        Directory.CreateDirectory(folder);
+
+        var fileName = Guid.NewGuid() + Path.GetExtension(documentFile.FileName);
+        var savePath = Path.Combine(folder, fileName);
+
+        using (var stream = new FileStream(savePath, FileMode.Create))
+        {
+            await documentFile.CopyToAsync(stream);
+        }
+
+        var url = $"/documents/{fileName}";
+        setPathCallback(url);
+
+        var doc = new Document
+        {
+            DocumentId = Guid.NewGuid().ToString(),
+            LessonId = model.LessonId,
+            Title = model.Title,
+            FilePath = url,
+            FileType = Path.GetExtension(documentFile.FileName),
+            SizeInBytes = documentFile.Length,
+            CreatedAt = DateTime.Now
+        };
+
+        await unitOfWork.Document.Add(doc);
+    }
+
+    public async Task<(Stream FileStream, string ContentType, string FileName)> GetDocumentStreamById(string id, string webRootPath)
+    {
+        var doc = unitOfWork.Document.GetById(id);
+        if (doc == null || string.IsNullOrEmpty(doc.FilePath))
+            return (null, null, null);
+
+        var relative = doc.FilePath.TrimStart('/');
+        var absolute = Path.Combine(webRootPath, relative);
+        if (!File.Exists(absolute))
+            return (null, null, null);
+
+        var provider = new FileExtensionContentTypeProvider();
+        if (!provider.TryGetContentType(absolute, out var contentType))
+        {
+            contentType = "application/octet-stream";
+        }
+
+        var stream = new FileStream(absolute, FileMode.Open, FileAccess.Read, FileShare.Read);
+        return (stream, contentType, Path.GetFileName(absolute));
     }
 }

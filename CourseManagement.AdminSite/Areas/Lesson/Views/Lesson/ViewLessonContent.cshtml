@@ -139,10 +139,10 @@
                 return;
             }
 
-            $.ajax({
-                url: '@Url.Action("GetVideosByLessonId", "Video", new { area = "Video" })' + `?lessonId=${lessonId}`,
-                type: "GET",
-                success: function (res) {
+           $.ajax({
+               url: '@Url.Action("GetVideosByLessonId", "Video", new { area = "Video" })' + `?lessonId=${lessonId}`,
+               type: "GET",
+               success: function (res) {
                     const list = res.data || [];
                     const container = $("#videoListContainer");
                     container.empty();
@@ -164,10 +164,33 @@
             `;
                         container.append(videoHtml);
                     });
+               },
+               error: function () {
+                   $("#videoListContainer").html("<p class='text-danger'>Không thể tải danh sách video.</p>");
+               },
+           });
+
+            $.ajax({
+                url: '@Url.Action("GetDocumentsByLessonId", "Document", new { area = "Document" })' + `?lessonId=${lessonId}`,
+                type: "GET",
+                success: function (res) {
+                    const list = res.data || [];
+                    const container = $("#documentListContainer");
+                    container.empty();
+
+                    if (list.length === 0) {
+                        container.html("<p>Chưa có tài liệu nào.</p>");
+                        return;
+                    }
+
+                    list.forEach(doc => {
+                        const item = `<div class='mb-2'><a href='@Url.Action("DownloadDocument","Document", new { area = "Document" })/${doc.documentId}' class='btn btn-link'>${doc.title}</a></div>`;
+                        container.append(item);
+                    });
                 },
                 error: function () {
-                    $("#videoListContainer").html("<p class='text-danger'>Không thể tải danh sách video.</p>");
-                },
+                    $("#documentListContainer").html("<p class='text-danger'>Không thể tải danh sách tài liệu.</p>");
+                }
             });
 
 
@@ -203,7 +226,7 @@
                         type: "mainContent",
                         content: contentData.mainContent || "Chưa có nội dung"
                     },
-                    {label: "Tài liệu đính kèm", type: "document", content: "Chưa có nội dung"},
+                    {label: "Tài liệu đính kèm", type: "document", content: "<div id='documentListContainer'><div class='loader'></div></div>"},
                     {
                         label: "Video bài học",
                         type: "video",

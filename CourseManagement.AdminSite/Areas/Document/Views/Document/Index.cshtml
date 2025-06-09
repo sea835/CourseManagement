@@ -1,6 +1,6 @@
 ﻿<h2>Documents</h2>
 <hr>
-<a href="@Url.Action("CreateCategory", "Category")"
+<a href="@Url.Action("CreateDocument", "Document")"
    class="btn btn-success btn-lg rounded-pill d-inline-flex align-items-center gap-2 shadow-lg custom-create-btn"
    style="font-weight: 600; letter-spacing: 0.5px;">
     <i class="fa-solid fa-plus fa-lg"></i> Create Document
@@ -36,12 +36,17 @@
                 "datatype": "json"
             },
             "columns": [
-                {"data": "documentId"},            // documentId
-                {"data": "lessonId"},              // lessonId
-                {"data": "title"},                 // title
-                {"data": "filePath"},              // filePath
-                {"data": "fileType"},              // fileType
-                {"data": "sizeInByte"}             // sizeInByte
+                {"data": "documentId"},
+                {"data": "lessonId"},
+                {"data": "title"},
+                {"data": "fileType"},
+                {"data": "sizeInByte"},
+                {
+                    "data": null,
+                    "render": function (data, type, row) {
+                        return `<a href="/Document/Document/DownloadDocument/${row.documentId}" class="btn btn-link">Download</a>`;
+                    }
+                }
             ]
         });
     </script>

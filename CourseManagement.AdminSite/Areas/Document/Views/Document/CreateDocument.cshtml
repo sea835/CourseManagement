@@ -1,0 +1,97 @@
+@model CourseManagement.Core.ViewModels.DocumentViewModel
+
+@{
+    ViewData["Title"] = "Upload Document";
+}
+<a href="javascript:history.back()" class="back-button">
+    <i class="fas fa-arrow-left pe-2"></i> Quay lại
+</a>
+<h2 class="mb-4">Upload Document</h2>
+
+<form asp-action="UploadAndCreateDocument" asp-controller="Document" asp-area="Document" enctype="multipart/form-data" method="post">
+    <input type="hidden" asp-for="LessonId" />
+    <div class="mb-3">
+        <label asp-for="Title" class="form-label">Title</label>
+        <input asp-for="Title" class="form-control" />
+        <span asp-validation-for="Title" class="text-danger"></span>
+    </div>
+    <div class="mb-4">
+        <label class="form-label fw-semibold">Course</label>
+        <select asp-for="CourseTitle" class="form-control shadow rounded-3 border-0 px-3 py-2" id="Course"></select>
+    </div>
+    <div class="mb-4">
+        <label asp-for="ChapterTitle" class="form-label fw-semibold">Chapter</label>
+        <select asp-for="ChapterTitle" class="form-control shadow rounded-3 border-0 px-3 py-2" id="Chapter"></select>
+    </div>
+    <div class="mb-4">
+        <label asp-for="LessonId" class="form-label fw-semibold">Lesson</label>
+        <select asp-for="LessonId" class="form-control shadow rounded-3 border-0 px-3 py-2" id="Lesson"></select>
+        <span asp-validation-for="LessonId" class="text-danger small"></span>
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Upload document</label>
+        <input type="file" name="documentFile" class="form-control" />
+    </div>
+    <button type="submit" class="btn btn-primary">Upload and Save</button>
+</form>
+
+@section Scripts {
+    <script>
+        $("#Course").select2({
+            placeholder: "Select a course",
+            ajax: {
+                url: '@Url.Action("GetAllCoursesSelect2", "Course", new { area = "Course" })',
+                dataType: 'json',
+                delay: 250,
+                data: function (params) {
+                    return { searchTerm: params.term };
+                },
+                processResults: function (data) {
+                    return { results: data.results.data };
+                },
+                cache: true
+            }
+        });
+        $('#Course').on('change', function () { $('#Chapter').val(null).trigger('change'); });
+        $("#Chapter").select2({
+            placeholder: "Select a chapter",
+            ajax: {
+                url: '@Url.Action("GetAllChaptersByCourseIdSelect2", "Chapter", new { area = "Chapter" })',
+                dataType: 'json',
+                delay: 250,
+                data: function (params) {
+                    return { searchTerm: params.term, courseId: $('#Course').val() };
+                },
+                processResults: function (data) {
+                    return { results: data.data };
+                },
+                cache: true
+            }
+        });
+        $('#Chapter').on('change', function () { $('#Lesson').val(null).trigger('change'); });
+        $("#Lesson").select2({
+            placeholder: "Select a lesson",
+            ajax: {
+                url: "@Url.Action("GetAllLessonsByChapterIdSelect2", "Lesson", new { area = "Lesson" })",
+                dataType: 'json',
+                delay: 250,
+                data: function (params) {
+                    return { searchTerm: params.term, chapterId: $('#Chapter').val() };
+                },
+                processResults: function (data) {
+                    return { results: data.data };
+                }
+            }
+        });
+        $('form').on('submit', function (e) {
+            e.preventDefault();
+            const lessonId = $('#Lesson').val();
+            if (!lessonId) { alert("Please select a lesson"); return false; }
+            $('input[name="LessonId"]').val(lessonId);
+            this.submit();
+        });
+    </script>
+    <style>
+        .back-button { display: inline-flex; align-items: center; padding: 0.75rem 1.5rem; background-color: #6e8efb; color: white; border-radius: 30px; text-decoration: none; font-weight: 600; margin-top: 1rem; border: none; cursor: pointer; }
+    </style>
+}
