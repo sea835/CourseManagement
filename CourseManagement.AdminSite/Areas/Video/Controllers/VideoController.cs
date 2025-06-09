@@ -46,6 +46,12 @@ namespace CourseManagement.AdminSite.Areas.Video.Controllers
             if (video == null) return NotFound();
             return View(video);
         }
+        
+        public IActionResult GetVideosByLessonId(string id)
+        {
+            var videos = videoService.GetAllVideosByLessonId(id);
+            return Json(new { data = videos });
+        }
 
         [HttpPost]
         public async Task<IActionResult> CreateVideo(VideoViewModel model)

@@ -14,5 +14,6 @@ namespace CourseManagement.Core.Interfaces.IServices
         IEnumerable<VideoViewModel> GetByLessonId(string lessonId);
         Task UploadAndCreateVideo(VideoViewModel model, IFormFile videoFile, string rootPath, Action<string> setUrlCallback);
         Task<(Stream FileStream, string ContentType)> GetVideoStreamById(string id, string webRootPath);
+        public IEnumerable<VideoViewModel> GetAllVideosByLessonId(string lessonId);
     }
 }

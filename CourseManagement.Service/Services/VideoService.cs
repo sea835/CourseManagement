@@ -151,5 +151,20 @@ namespace CourseManagement.Service.Services
             return (stream, "video/mp4");
         }
 
+        public IEnumerable<VideoViewModel> GetAllVideosByLessonId(string lessonId)
+        {
+            var videos = unitOfWork.Video.BuildQuery(v => v.LessonId == lessonId)
+                .Select(v => new VideoViewModel
+                {
+                    VideoId = v.VideoId,
+                    LessonId = v.LessonId,
+                    Title = v.Title,
+                    Url = v.Url,
+                    Duration = v.Duration,
+                    Provider = v.Provider,
+                    CreatedAt = v.CreatedAt
+                }).ToList();
+            return videos;
+        }
     }
 }

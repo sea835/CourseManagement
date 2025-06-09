@@ -139,7 +139,39 @@
                 return;
             }
 
-            $.get('@Url.Action("GetLessonById", "Lesson")', { id: lessonId })
+            $.ajax({
+                url: '@Url.Action("GetVideosByLessonId", "Video", new { area = "Video" })' + `?lessonId=${lessonId}`,
+                type: "GET",
+                success: function (res) {
+                    const list = res.data || [];
+                    const container = $("#videoListContainer");
+                    container.empty();
+
+                    if (list.length === 0) {
+                        container.html("<p>Chưa có video nào.</p>");
+                        return;
+                    }
+
+                    list.forEach(video => {
+                        const videoHtml = `
+                <div class="mb-4">
+                    <h5>${video.title}</h5>
+                    <video controls width="100%" style="border-radius: 10px;">
+                        <source src="@Url.Action("StreamLessonVideo", "Video", new { area = "Video" })/${video.videoId}" type="video/mp4">
+                        Trình duyệt không hỗ trợ video HTML5.
+                    </video>
+                </div>
+            `;
+                        container.append(videoHtml);
+                    });
+                },
+                error: function () {
+                    $("#videoListContainer").html("<p class='text-danger'>Không thể tải danh sách video.</p>");
+                },
+            });
+
+
+            $.get('@Url.Action("GetLessonById", "Lesson")', {id: lessonId})
                 .done(function (res) {
                     if (res && res.data) {
                         $("#lessonTitle").text(res.data.title);
@@ -151,7 +183,7 @@
                     showError("Không thể tải thông tin bài học");
                 });
 
-            $.get('@Url.Action("GetContentByLessonId", "LessonContent", new { area = "LessonContent" })', { id: lessonId })
+            $.get('@Url.Action("GetContentByLessonId", "LessonContent", new { area = "LessonContent" })', {id: lessonId})
                 .done(function (res) {
                     if (res) renderContent(res);
                     else showNoContent();
@@ -165,10 +197,18 @@
                 container.empty();
 
                 const sections = [
-                    { label: "Tóm tắt", type: "summary", content: contentData.summary || "Chưa có nội dung" },
-                    { label: "Nội dung bài học", type: "mainContent", content: contentData.mainContent || "Chưa có nội dung" },
-                    { label: "Tài liệu đính kèm", type: "document", content: "Chưa có nội dung" },
-                    { label: "Video bài học", type: "video", content: "Chưa có nội dung" }
+                    {label: "Tóm tắt", type: "summary", content: contentData.summary || "Chưa có nội dung"},
+                    {
+                        label: "Nội dung bài học",
+                        type: "mainContent",
+                        content: contentData.mainContent || "Chưa có nội dung"
+                    },
+                    {label: "Tài liệu đính kèm", type: "document", content: "Chưa có nội dung"},
+                    {
+                        label: "Video bài học",
+                        type: "video",
+                        content: "<div id='videoListContainer'><div class='loader'></div></div>"
+                    }
                 ];
 
                 sections.forEach(section => {
@@ -266,11 +306,11 @@
             switch (type) {
                 case "summary":
                     url = "/LessonContent/LessonContent/UpdateSummary";
-                    payload = { id: lessonId, summary: newValue };
+                    payload = {id: lessonId, summary: newValue};
                     break;
                 case "mainContent":
                     url = "/LessonContent/LessonContent/UpdateMainContent";
-                    payload = { id: lessonId, mainContent: newValue };
+                    payload = {id: lessonId, mainContent: newValue};
                     break;
                 // Nếu bạn sau này có UpdateDocument / UpdateVideo:
                 case "document":
