@@ -1,5 +1,5 @@
-﻿using CourseManagement.Core.Interfaces.IServices;
-using CourseManagement.Core.ViewModels;
+﻿using CourseManagement.Core.ViewModels;
+using CourseManagement.Service.IServices;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CourseManagement.AdminSite.Areas.Lesson.Controllers;

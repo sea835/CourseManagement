@@ -1,5 +1,5 @@
-﻿using CourseManagement.Core.Interfaces.IServices;
-using CourseManagement.Core.ViewModels;
+﻿using CourseManagement.Core.ViewModels;
+using CourseManagement.Service.IServices;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CourseManagement.AdminSite.Areas.Video.Controllers
@@ -52,7 +52,7 @@ namespace CourseManagement.AdminSite.Areas.Video.Controllers
             var videos = videoService.GetAllVideosByLessonId(lessonId);
             return Json(new { data = videos });
         }
-
+        
         [HttpPost]
         public async Task<IActionResult> CreateVideo(VideoViewModel model)
         {

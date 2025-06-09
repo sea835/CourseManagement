@@ -1,7 +1,7 @@
 ﻿using CourseManagement.Core.ViewModels;
 using Microsoft.AspNetCore.Http;
 
-namespace CourseManagement.Core.Interfaces.IServices
+namespace CourseManagement.Service.IServices
 {
     public interface IVideoService
     {

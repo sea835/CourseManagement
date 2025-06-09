@@ -1,7 +1,7 @@
-﻿using CourseManagement.Core.Interfaces.IServices;
-using CourseManagement.Core.Models;
+﻿using CourseManagement.Core.Models;
 using CourseManagement.Core.ViewModels;
 using CourseManagement.Data.UnitOfWork;
+using CourseManagement.Service.IServices;
 using Microsoft.AspNetCore.Http;
 
 namespace CourseManagement.Service.Services

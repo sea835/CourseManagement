@@ -1,6 +1,6 @@
-using CourseManagement.Core.Interfaces.IServices;
 using CourseManagement.Data.DbContext;
 using CourseManagement.Data.UnitOfWork;
+using CourseManagement.Service.IServices;
 using CourseManagement.Service.Services;
 using Microsoft.EntityFrameworkCore;
 

@@ -1,4 +1,4 @@
-﻿using CourseManagement.Core.Interfaces.IServices;
+﻿using CourseManagement.Service.IServices;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CourseManagement.AdminSite.Areas.Document.Controllers;

@@ -1,6 +1,6 @@
 using CourseManagement.Core.ViewModels;
 
-namespace CourseManagement.Core.Interfaces.IServices
+namespace CourseManagement.Service.IServices
 {
     public interface ILessonContentService
     {

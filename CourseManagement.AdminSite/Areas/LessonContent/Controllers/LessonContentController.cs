@@ -1,5 +1,5 @@
-using CourseManagement.Core.Interfaces.IServices;
 using CourseManagement.Core.ViewModels;
+using CourseManagement.Service.IServices;
 using CourseManagement.Service.Services;
 using Microsoft.AspNetCore.Mvc;
 
