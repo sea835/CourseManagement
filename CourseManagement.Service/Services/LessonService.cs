@@ -89,15 +89,23 @@ public class LessonService: ILessonService
     {
         try
         {
-            var existingLesson = unitOfWork.Lesson.BuildQuery(l => l.LessonId == lesson.LessonId).FirstOrDefault();
-            existingLesson.LessonId = lesson.LessonId;
+            var existingLesson = unitOfWork.Lesson
+                .BuildQuery(l => l.LessonId == lesson.LessonId)
+                .FirstOrDefault();
+
+            if (existingLesson == null)
+            {
+                return ResultViewModel.Fail("Lesson not found");
+            }
+
             existingLesson.Title = lesson.Title;
             existingLesson.OrderNumber = lesson.OrderNumber;
             existingLesson.ChapterId = lesson.ChapterId;
             existingLesson.Duration = lesson.Duration;
             existingLesson.LessonType = lesson.LessonType;
             existingLesson.IsPreviewable = lesson.IsPreviewable;
-            unitOfWork.Lesson.Update(lesson);
+
+            unitOfWork.Lesson.Update(existingLesson);
             return ResultViewModel.Success("Update lesson by id successfully");
         }
         catch (Exception ex)

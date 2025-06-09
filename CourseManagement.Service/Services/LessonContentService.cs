@@ -31,8 +31,8 @@ namespace CourseManagement.Service.Services
         
         public ContentViewModel GetById(string id)
         {
-            // Get lesson by ID
-            var content = unitOfWork.Content.BuildQuery(l => l.LessonId == id).FirstOrDefault();
+            // Get content by content ID
+            var content = unitOfWork.Content.BuildQuery(c => c.ContentId == id).FirstOrDefault();
             if (content == null)
                 return null;
 

@@ -79,13 +79,22 @@ public class ChapterService : IChapterService
     {
         try
         {
-            var existingChapter = unitOfWork.Chapter.BuildQuery(c => c.ChapterId == chapter.ChapterId).FirstOrDefault();
+            var existingChapter = unitOfWork.Chapter
+                .BuildQuery(c => c.ChapterId == chapter.ChapterId)
+                .FirstOrDefault();
+
+            if (existingChapter == null)
+            {
+                return ResultViewModel.Fail("Chapter not found");
+            }
+
             existingChapter.CourseId = chapter.CourseId;
             existingChapter.Title = chapter.Title;
             existingChapter.Description = chapter.Description;
             existingChapter.OrderNumber = chapter.OrderNumber;
             existingChapter.SetUpdated();
-            unitOfWork.Chapter.Update(chapter);
+
+            unitOfWork.Chapter.Update(existingChapter);
             unitOfWork.SaveChange();
             return ResultViewModel.Success("Update chapter successfully");
         }

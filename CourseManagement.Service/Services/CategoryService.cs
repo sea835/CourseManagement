@@ -55,24 +55,32 @@ public class CategoryService: ICategoryService
         }
     }
     
-    public ResultViewModel UpdateCategory(Category category)
-    {
-        try
+        public ResultViewModel UpdateCategory(Category category)
         {
-            var existingCategory = unitOfWork.Category.BuildQuery(c => c.CategoryId == category.CategoryId).FirstOrDefault();
-            existingCategory.CategoryId = category.CategoryId;
-            existingCategory.Name = category.Name;
-            existingCategory.Description = category.Description;
-            existingCategory.SetUpdated();
-            unitOfWork.Category.Update(category);
-            unitOfWork.SaveChange();
-            return ResultViewModel.Success("Update Category Success");
+            try
+            {
+                var existingCategory = unitOfWork.Category
+                    .BuildQuery(c => c.CategoryId == category.CategoryId)
+                    .FirstOrDefault();
+
+                if (existingCategory == null)
+                {
+                    return ResultViewModel.Fail("Category not found");
+                }
+
+                existingCategory.Name = category.Name;
+                existingCategory.Description = category.Description;
+                existingCategory.SetUpdated();
+
+                unitOfWork.Category.Update(existingCategory);
+                unitOfWork.SaveChange();
+                return ResultViewModel.Success("Update Category Success");
+            }
+            catch (Exception ex)
+            {
+                return ResultViewModel.FailException(ex);
+            }
         }
-        catch (Exception ex)
-        {
-            return ResultViewModel.FailException(ex);
-        }
-    }
     
     public ResultViewModel DeleteCategory(string id)
     {

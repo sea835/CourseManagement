@@ -62,27 +62,37 @@ public class DocumentService: IDocumentService
         }
     }
     
-    public ResultViewModel UpdateDocument(Document document)
-    {
-        try
+        public ResultViewModel UpdateDocument(Document document)
         {
-            var existingDocument = unitOfWork.Document.BuildQuery(d=> d.DocumentId == document.DocumentId).FirstOrDefault();
-            existingDocument.Title = document.Title;
-            existingDocument.DocumentId = document.DocumentId;
-            existingDocument.FilePath = document.FilePath;
-            existingDocument.FileType = document.FileType;
-            existingDocument.LessonId = document.LessonId;
-            existingDocument.SizeInBytes = document.SizeInBytes;
-            existingDocument.SetUpdated();
-            unitOfWork.Document.Update(document);
-            unitOfWork.SaveChange();
-            return ResultViewModel.Success("Document updated successfully", document);
+            try
+            {
+                var existingDocument = unitOfWork.Document
+                    .BuildQuery(d => d.DocumentId == document.DocumentId)
+                    .FirstOrDefault();
+
+                if (existingDocument == null)
+                {
+                    return ResultViewModel.Fail("Document not found");
+                }
+
+                existingDocument.Title = document.Title;
+                existingDocument.FilePath = document.FilePath;
+                existingDocument.FileType = document.FileType;
+                existingDocument.LessonId = document.LessonId;
+                existingDocument.SizeInBytes = document.SizeInBytes;
+                existingDocument.SetUpdated();
+
+                unitOfWork.Document.Update(existingDocument);
+                unitOfWork.SaveChange();
+                return ResultViewModel.Success(
+                    "Document updated successfully",
+                    existingDocument);
+            }
+            catch (Exception ex)
+            {
+                return ResultViewModel.FailException(ex);
+            }
         }
-        catch (Exception ex)
-        {
-            return ResultViewModel.FailException(ex);
-        }
-    }
     
     public ResultViewModel DeleteDocument(string id)
     {
