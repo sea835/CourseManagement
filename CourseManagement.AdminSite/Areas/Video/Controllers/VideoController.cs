@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace CourseManagement.AdminSite.Areas.Video.Controllers
 {
     [Area("Video")]
-    public class VideoController(IVideoService videoService) : Controller
+    public class VideoController(IVideoService videoService, IWebHostEnvironment env) : Controller
     {
         public IActionResult Index()
         {
@@ -17,8 +17,7 @@ namespace CourseManagement.AdminSite.Areas.Video.Controllers
             var videos = videoService.GetAllVideos().Result;
             return Json(new { data = videos });
         }
-
-        [HttpGet]
+        
         public async Task<IActionResult> GetVideoById(string id)
         {
             var video = await videoService.GetById(id);
@@ -29,6 +28,23 @@ namespace CourseManagement.AdminSite.Areas.Video.Controllers
         public IActionResult CreateVideo()
         {
             return View();
+        }
+        
+        public async Task<IActionResult> StreamLessonVideo(string id)
+        {
+            var (fileStream, contentType) = await videoService.GetVideoStreamById(id, env.WebRootPath);
+
+            if (fileStream == null)
+                return NotFound();
+
+            return File(fileStream, contentType, enableRangeProcessing: true);
+        }
+        
+        public IActionResult EditVideo(string id)
+        {
+            var video = videoService.GetById(id).Result;
+            if (video == null) return NotFound();
+            return View(video);
         }
 
         [HttpPost]
@@ -62,26 +78,13 @@ namespace CourseManagement.AdminSite.Areas.Video.Controllers
         [HttpPost]
         public async Task<IActionResult> UploadAndCreateVideo(VideoViewModel model, IFormFile videoFile)
         {
-            if (videoFile == null || videoFile.Length == 0)
-                throw new Exception("No video file provided.");
-
-            // Lưu file
-            var fileName = Guid.NewGuid() + Path.GetExtension(videoFile.FileName);
-            var savePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/videos", fileName);
-
-            using (var stream = new FileStream(savePath, FileMode.Create))
-            {
-                await videoFile.CopyToAsync(stream);
-            }
-
-            // Tạo URL và lưu DB
-            model.Url = Url.Content($"~/videos/{fileName}");
-            model.VideoId = Guid.NewGuid().ToString();
-            model.CreatedAt = DateTime.Now;
-
-            await videoService.Create(model);
-
-            TempData["SuccessMessage"] = "Video đã được tải lên và lưu thành công.";
+            string savedUrl = string.Empty;
+            await videoService.UploadAndCreateVideo(
+                model, 
+                videoFile, 
+                Directory.GetCurrentDirectory(),
+                url => savedUrl = url
+            );
             return RedirectToAction("Index", new { lessonId = model.LessonId });
         }
 

@@ -1,19 +1,19 @@
 ﻿@model CourseManagement.Core.ViewModels.VideoViewModel
 
 @{
-    ViewData["Title"] = "Upload Video";
+    ViewData["Title"] = "Edit Video Information";
 }
 <a href="javascript:history.back()" class="back-button">
     <i class="fas fa-arrow-left pe-2"></i> Quay lại
 </a>
-<h2 class="mb-4">Upload Video</h2>
+<h2 class="mb-4">Edit Video Information</h2>
 
 <form asp-action="UploadAndCreateVideo" asp-controller="Video" asp-area="Video" enctype="multipart/form-data"
       method="post">
     <input type="hidden" asp-for="LessonId"/>
 
     <div class="mb-3">
-        <label asp-for="Title" class="form-label">Title</label>
+        <label asp-for="Title" class="form-label">Video Title</label>
         <input asp-for="Title" class="form-control"/>
         <span asp-validation-for="Title" class="text-danger"></span>
     </div>
@@ -54,7 +54,7 @@
         <input type="file" name="videoFile" class="form-control" accept="video/*"/>
     </div>
 
-    <button type="submit" class="btn btn-primary">Upload and Save</button>
+    <button type="submit" class="btn btn-primary">Save</button>
 </form>
 
 
@@ -131,22 +131,19 @@
             }
         })
 
-        $('form').on('submit', function (e) {
-            e.preventDefault(); // Prevent the default form submission
-
-            // Get the selected lesson ID from Select2
+        $('form').on('submit', function () {
+            $('#Lesson').trigger('change'); // Cập nhật Select2 value
             const lessonId = $('#Lesson').val();
 
-            if (!lessonId) {
-                alert("Please select a lesson");
-                return false;
+            // Nếu vì lý do gì mà Select2 không gán giá trị cho <select> thực sự,
+            // thì ép thêm input hidden để chắc chắn server nhận được
+            if (!$('select[name="LessonId"]').val()) {
+                $('<input>').attr({
+                    type: 'hidden',
+                    name: 'LessonId',
+                    value: lessonId
+                }).appendTo(this);
             }
-
-            // Update the hidden input with the lesson ID
-            $('input[name="LessonId"]').val(lessonId);
-
-            // Now submit the form programmatically
-            this.submit();
         });
     </script>
     <style>

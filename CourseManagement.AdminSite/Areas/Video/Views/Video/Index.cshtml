@@ -13,17 +13,36 @@
             }">
         <thead>
         <tr>
-            <th>VideoId</th>
+            @* <th>VideoId</th> *@
             <th>Course</th>
             <th>Chapter</th>
             <th>Lesson</th>
-            <th>Title</th>
+            <th>Video Title</th>
             <th>Duration</th>
             <th>Provider</th>
+            <th>Actions</th>
         </tr>
         </thead>
         <tbody></tbody>
     </table>
+</div>
+
+<!-- Video Modal -->
+<div class="modal fade" id="videoModal" tabindex="-1" aria-labelledby="videoModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-dark text-white">
+                <h5 class="modal-title" id="videoModalLabel">Video Preview</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <video id="videoPlayer" controls width="100%" height="auto">
+                    <source id="videoSource" src="" type="video/mp4"/>
+                    Trình duyệt của bạn không hỗ trợ thẻ video.
+                </video>
+            </div>
+        </div>
+    </div>
 </div>
 
 
@@ -37,14 +56,67 @@
                 "datatype": "json"
             },
             "columns": [
-                { "data": "videoId"},
-                { "data": "courseTitle"},
-                { "data": "chapterTitle"},
-                { "data": "lessonTitle"},
-                { "data": "title"},
-                { "data": "duration"},
-                { "data": "provider"}
+                // {"data": "videoId"},
+                {"data": "courseTitle"},
+                {"data": "chapterTitle"},
+                {"data": "lessonTitle"},
+                {"data": "title"},
+                {"data": "duration"},
+                {"data": "provider"},
+                {
+                    "data": null,
+                    "render": function (data, type, row) {
+                        return `
+                                <div class="flex flex-row items-center" style="width: 100px">
+                                    <a href="/Video/Video/EditVideo/${row.videoId}"
+                                       style="font-size: 25px; color: Dodgerblue;"
+                                       class="text-decoration-none hover:text-blue-700 transition-colors duration-200"
+                                       title="Edit">
+                                        <i class="fa fa-pen"></i>
+                                    </a>
+                                    <a href="#" onclick="showVideoModal('${row.videoId}')" 
+                                       style="font-size: 25px; color: Dodgerblue;"
+                                       class="text-decoration-none hover:text-blue-700 transition-colors duration-200"
+                                       title="View">
+                                        <i class="fa fa-eye"></i>
+                                    </a>
+                                    <a href="#"
+                                       class="hover:text-red-600 transition-colors duration-200"
+                                       data-bs-toggle="modal" 
+                                       data-bs-target="#delete-conform"
+                                       data-course-id="${row.videoId}"
+                                       style="font-size: 25px; color: tomato;"
+                                       title="Delete">
+                                        <i class="fa fa-trash"></i>
+                                    </a>
+                                </div>
+                                `;
+                    },
+                }
             ]
         });
     </script>
+    <script>
+        function showVideoModal(videoId) {
+            // Make sure we use the full, correct URL path to match the controller action
+            const videoUrl = '@Url.Action("StreamLessonVideo", "Video", new { area = "Video" })/' + videoId;
+
+            // Clear any previous video
+            $("#videoPlayer")[0].pause();
+
+            // Set src and reload video
+            $("#videoSource").attr("src", videoUrl);
+            $("#videoPlayer")[0].load();
+
+            // Show modal
+            const modal = new bootstrap.Modal(document.getElementById('videoModal'));
+            modal.show();
+
+            // Add event listener to stop video when modal is closed
+            $('#videoModal').on('hidden.bs.modal', function () {
+                $("#videoPlayer")[0].pause();
+            });
+        }
+    </script>
+
 }

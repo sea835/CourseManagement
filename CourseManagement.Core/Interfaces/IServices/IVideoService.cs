@@ -1,4 +1,5 @@
 ﻿using CourseManagement.Core.ViewModels;
+using Microsoft.AspNetCore.Http;
 
 namespace CourseManagement.Core.Interfaces.IServices
 {
@@ -11,5 +12,7 @@ namespace CourseManagement.Core.Interfaces.IServices
         Task Delete(string id);
         Task Restore(string id);
         IEnumerable<VideoViewModel> GetByLessonId(string lessonId);
+        Task UploadAndCreateVideo(VideoViewModel model, IFormFile videoFile, string rootPath, Action<string> setUrlCallback);
+        Task<(Stream FileStream, string ContentType)> GetVideoStreamById(string id, string webRootPath);
     }
 }

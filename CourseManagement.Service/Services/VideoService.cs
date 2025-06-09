@@ -2,6 +2,7 @@
 using CourseManagement.Core.Models;
 using CourseManagement.Core.ViewModels;
 using CourseManagement.Data.UnitOfWork;
+using Microsoft.AspNetCore.Http;
 
 namespace CourseManagement.Service.Services
 {
@@ -9,20 +10,14 @@ namespace CourseManagement.Service.Services
     {
         public async Task<IEnumerable<VideoViewModel>> GetAllVideos()
         {
-            var courses = unitOfWork.Course.GetAll().ToList();
-            var chapters = unitOfWork.Chapter.GetAll().ToList();
-            var lessons = unitOfWork.Lesson.GetAll().ToList();
-            var videos = unitOfWork.Video.GetAll().ToList();
-            var videoViewModels = (from video in videos
-                join lesson in lessons
-                    on video.LessonId equals lesson.LessonId into lessonGroup
-                from l in lessonGroup.DefaultIfEmpty()
-                join chapter in chapters
-                    on l?.ChapterId equals chapter.ChapterId into chapterGroup
-                from c in chapterGroup.DefaultIfEmpty()
-                join course in courses
-                    on c?.CourseId equals course.CourseId into courseGroup
-                from cr in courseGroup.DefaultIfEmpty()
+            var videoViewModels = (
+                from video in unitOfWork.Video.GetAll().ToList()
+                join lesson in unitOfWork.Lesson.GetAll().ToList()
+                    on video.LessonId equals lesson.LessonId
+                join chapter in unitOfWork.Chapter.GetAll().ToList()
+                    on lesson.ChapterId equals chapter.ChapterId
+                join course in unitOfWork.Course.GetAll().ToList()
+                    on chapter.CourseId equals course.CourseId
                 select new VideoViewModel
                 {
                     VideoId = video.VideoId,
@@ -32,9 +27,9 @@ namespace CourseManagement.Service.Services
                     Duration = video.Duration,
                     Provider = video.Provider,
                     CreatedAt = video.CreatedAt,
-                    CourseTitle = cr?.Title,
-                    LessonTitle = l?.Title,
-                    ChapterTitle = c?.Title
+                    LessonTitle = lesson.Title,
+                    ChapterTitle = chapter.Title,
+                    CourseTitle = course.Title
                 }).ToList();
             return videoViewModels;
         }
@@ -104,5 +99,57 @@ namespace CourseManagement.Service.Services
                             CreatedAt = v.CreatedAt
                         });
         }
+        
+        public async Task UploadAndCreateVideo(VideoViewModel model, IFormFile videoFile, string rootPath, Action<string> setUrlCallback)
+        {
+            if (videoFile == null || videoFile.Length == 0)
+                throw new Exception("No video file provided.");
+
+            var fileName = Guid.NewGuid() + Path.GetExtension(videoFile.FileName);
+            var savePath = Path.Combine(rootPath, "wwwroot/videos", fileName);
+
+            using (var stream = new FileStream(savePath, FileMode.Create))
+            {
+                await videoFile.CopyToAsync(stream);
+            }
+
+            // Trả lại đường dẫn URL để controller sử dụng
+            var url = $"/videos/{fileName}";
+            setUrlCallback(url);
+
+            model.VideoId = Guid.NewGuid().ToString();
+            model.CreatedAt = DateTime.Now;
+            model.Url = url;
+
+            var video = new Video
+            {
+                VideoId = model.VideoId,
+                LessonId = model.LessonId,
+                Title = model.Title,
+                Url = model.Url,
+                Duration = model.Duration,
+                Provider = model.Provider,
+                CreatedAt = model.CreatedAt
+            };
+
+            await unitOfWork.Video.Add(video);
+        }
+        
+        public async Task<(Stream FileStream, string ContentType)> GetVideoStreamById(string id, string webRootPath)
+        {
+            var video = await GetById(id);
+            if (video == null || string.IsNullOrEmpty(video.Url))
+                return (null, null);
+
+            var relativePath = video.Url.TrimStart('/');
+            var absolutePath = Path.Combine(webRootPath, relativePath);
+
+            if (!System.IO.File.Exists(absolutePath))
+                return (null, null);
+
+            var stream = new FileStream(absolutePath, FileMode.Open, FileAccess.Read);
+            return (stream, "video/mp4");
+        }
+
     }
 }
