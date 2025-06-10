@@ -1,4 +1,5 @@
 ﻿using CourseManagement.Core.Models;
+using System;
 using System.Linq;
 using CourseManagement.Core.RequestModels;
 using CourseManagement.Core.ViewModels;
@@ -12,10 +13,45 @@ namespace CourseManagement.Api.Controllers;
 public class CourseController(ICourseService courseService) : ControllerBase
 {
     [HttpGet]
-    public IActionResult GetAllCourses()
+    public ResultViewModel GetAllCourses()
     {
-        var courses = courseService.GetAllCourse()
-            .Select(c => new CourseResponseModel
+        try
+        {
+            var courses = courseService.GetAllCourse()
+                .Select(c => new CourseResponseModel
+                {
+                    CourseId = c.CourseId,
+                    Title = c.Title,
+                    Description = c.Description,
+                    Level = c.Level,
+                    Duration = c.Duration,
+                    Language = c.Language,
+                    ThumbnailUrl = c.ThumbnailUrl,
+                    Price = c.Price,
+                    IsFree = c.IsFree,
+                    AuthorName = c.AuthorName,
+                    CategoryId = c.CategoryId,
+                    CategoryName = c.CategoryName
+                });
+            return ResultViewModel.Success("Get all courses successfully", courses);
+        }
+        catch (Exception ex)
+        {
+            return ResultViewModel.FailException(ex);
+        }
+    }
+
+    [HttpGet("{id}")]
+    public ResultViewModel GetCourseById(string id)
+    {
+        try
+        {
+            var c = courseService.GetCourseById(id);
+            if (c == null)
+            {
+                return ResultViewModel.Fail("Course not found");
+            }
+            var course = new CourseResponseModel
             {
                 CourseId = c.CourseId,
                 Title = c.Title,
@@ -29,113 +65,133 @@ public class CourseController(ICourseService courseService) : ControllerBase
                 AuthorName = c.AuthorName,
                 CategoryId = c.CategoryId,
                 CategoryName = c.CategoryName
-            });
-        return Ok(courses);
-    }
-
-    [HttpGet("{id}")]
-    public IActionResult GetCourseById(string id)
-    {
-        var c = courseService.GetCourseById(id);
-        if (c == null) return NotFound();
-        var course = new CourseResponseModel
+            };
+            return ResultViewModel.Success("Get course by id successfully", course);
+        }
+        catch (Exception ex)
         {
-            CourseId = c.CourseId,
-            Title = c.Title,
-            Description = c.Description,
-            Level = c.Level,
-            Duration = c.Duration,
-            Language = c.Language,
-            ThumbnailUrl = c.ThumbnailUrl,
-            Price = c.Price,
-            IsFree = c.IsFree,
-            AuthorName = c.AuthorName,
-            CategoryId = c.CategoryId,
-            CategoryName = c.CategoryName
-        };
-        return Ok(course);
+            return ResultViewModel.FailException(ex);
+        }
     }
 
     [HttpPost]
     public ResultViewModel CreateCourse([FromBody] CourseRequestModel model)
     {
-        var course = new Course
+        try
         {
-            Title = model.Title,
-            Description = model.Description,
-            FullDescription = model.FullDescription,
-            Level = model.Level,
-            Duration = model.Duration,
-            Language = model.Language,
-            ThumbnailUrl = model.ThumbnailUrl,
-            Price = model.Price,
-            IsFree = model.IsFree,
-            AuthorName = model.AuthorName,
-            CategoryId = model.CategoryId
-        };
-        var result = courseService.CreateCourse(course);
-        Response.StatusCode = result.Code;
-        return result;
+            var course = new Course
+            {
+                Title = model.Title,
+                Description = model.Description,
+                FullDescription = model.FullDescription,
+                Level = model.Level,
+                Duration = model.Duration,
+                Language = model.Language,
+                ThumbnailUrl = model.ThumbnailUrl,
+                Price = model.Price,
+                IsFree = model.IsFree,
+                AuthorName = model.AuthorName,
+                CategoryId = model.CategoryId
+            };
+            var result = courseService.CreateCourse(course);
+            Response.StatusCode = result.Code;
+            return result;
+        }
+        catch (Exception ex)
+        {
+            return ResultViewModel.FailException(ex);
+        }
     }
 
     [HttpPut("{id}")]
     public ResultViewModel UpdateCourse(string id, [FromBody] CourseRequestModel model)
     {
-        var course = new CourseViewModel
+        try
         {
-            CourseId = id,
-            Title = model.Title,
-            Description = model.Description,
-            FullDescription = model.FullDescription,
-            Level = model.Level,
-            Duration = model.Duration,
-            Language = model.Language,
-            ThumbnailUrl = model.ThumbnailUrl,
-            Price = model.Price,
-            IsFree = model.IsFree,
-            AuthorName = model.AuthorName,
-            CategoryId = model.CategoryId
-        };
-        var result = courseService.UpdateCourse(course);
-        Response.StatusCode = result.Code;
-        return result;
+            var course = new CourseViewModel
+            {
+                CourseId = id,
+                Title = model.Title,
+                Description = model.Description,
+                FullDescription = model.FullDescription,
+                Level = model.Level,
+                Duration = model.Duration,
+                Language = model.Language,
+                ThumbnailUrl = model.ThumbnailUrl,
+                Price = model.Price,
+                IsFree = model.IsFree,
+                AuthorName = model.AuthorName,
+                CategoryId = model.CategoryId
+            };
+            var result = courseService.UpdateCourse(course);
+            Response.StatusCode = result.Code;
+            return result;
+        }
+        catch (Exception ex)
+        {
+            return ResultViewModel.FailException(ex);
+        }
     }
 
     [HttpDelete("{id}")]
     public ResultViewModel DeleteCourse(string id)
     {
-        var result = courseService.DeleteCourse(id);
-        Response.StatusCode = result.Code;
-        return result;
+        try
+        {
+            var result = courseService.DeleteCourse(id);
+            Response.StatusCode = result.Code;
+            return result;
+        }
+        catch (Exception ex)
+        {
+            return ResultViewModel.FailException(ex);
+        }
     }
 
     [HttpGet("category/{categoryId}")]
-    public IActionResult GetAllCoursesByCategoryId(string categoryId)
+    public ResultViewModel GetAllCoursesByCategoryId(string categoryId)
     {
-        var courses = courseService.GetAllCoursesByCategoryId(categoryId);
-        return Ok(courses);
+        try
+        {
+            var courses = courseService.GetAllCoursesByCategoryId(categoryId);
+            return courses;
+        }
+        catch (Exception ex)
+        {
+            return ResultViewModel.FailException(ex);
+        }
     }
 
     [HttpGet("lesson/{lessonId}")]
-    public IActionResult GetAllCoursesByLessonId(string lessonId)
+    public ResultViewModel GetAllCoursesByLessonId(string lessonId)
     {
-        var c = courseService.GetCourseByLessonId(lessonId);
-        if (c == null) return NotFound();
-        var course = new CourseResponseModel
+        try
         {
-            CourseId = c.CourseId,
-            Title = c.Title,
-            Description = c.Description,
-            Level = c.Level,
-            Duration = c.Duration,
-            Language = c.Language,
-            ThumbnailUrl = c.ThumbnailUrl,
-            Price = c.Price,
-            IsFree = c.IsFree,
-            AuthorName = c.AuthorName,
-            CategoryId = c.CategoryId,
-            CategoryName = c.CategoryName
-        };
-        return Ok(course);
+            var c = courseService.GetCourseByLessonId(lessonId);
+            if (c == null)
+            {
+                return ResultViewModel.Fail("Course not found");
+            }
+            var course = new CourseResponseModel
+            {
+                CourseId = c.CourseId,
+                Title = c.Title,
+                Description = c.Description,
+                Level = c.Level,
+                Duration = c.Duration,
+                Language = c.Language,
+                ThumbnailUrl = c.ThumbnailUrl,
+                Price = c.Price,
+                IsFree = c.IsFree,
+                AuthorName = c.AuthorName,
+                CategoryId = c.CategoryId,
+                CategoryName = c.CategoryName
+            };
+            return ResultViewModel.Success("Get course by lesson id successfully", course);
+        }
+        catch (Exception ex)
+        {
+            return ResultViewModel.FailException(ex);
+        }
     }
 }
