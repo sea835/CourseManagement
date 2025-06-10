@@ -12,12 +12,46 @@ namespace CourseManagement.Api.Controllers;
 public class LessonController(ILessonService lessonService): ControllerBase
 {
     [HttpGet]
-    public IActionResult GetAllLessons()
+    public ResultViewModel GetAllLessons()
     {
-        var result = lessonService.GetAllLessons();
-        if (result.Data is IEnumerable<LessonViewModel> list)
+        try
         {
-            result.Data = list.Select(l => new LessonResponseModel
+            var result = lessonService.GetAllLessons();
+            if (result.Data is IEnumerable<LessonViewModel> list)
+            {
+                result.Data = list.Select(l => new LessonResponseModel
+                {
+                    LessonId = l.LessonId,
+                    Title = l.Title,
+                    OrderNumber = l.OrderNumber,
+                    ChapterId = l.ChapterId,
+                    Duration = l.Duration,
+                    LessonType = l.LessonType,
+                    IsPreviewable = l.IsPreviewable,
+                    ChapterTitle = l.ChapterTitle,
+                    CourseTitle = l.CourseTitle
+                });
+            }
+            Response.StatusCode = result.Code;
+            return result;
+        }
+        catch (Exception ex)
+        {
+            return ResultViewModel.FailException(ex);
+        }
+    }
+
+    [HttpGet("{id}")]
+    public ResultViewModel GetLessonById(string id)
+    {
+        try
+        {
+            var l = lessonService.GetLessonById(id);
+            if (l == null)
+            {
+                return ResultViewModel.Fail("Lesson not found");
+            }
+            var lesson = new LessonResponseModel
             {
                 LessonId = l.LessonId,
                 Title = l.Title,
@@ -28,74 +62,78 @@ public class LessonController(ILessonService lessonService): ControllerBase
                 IsPreviewable = l.IsPreviewable,
                 ChapterTitle = l.ChapterTitle,
                 CourseTitle = l.CourseTitle
-            });
+            };
+            return ResultViewModel.Success("Get lesson by id successfully", lesson);
         }
-        Response.StatusCode = result.Code;
-        return Ok(result);
-    }
-
-    [HttpGet("{id}")]
-    public IActionResult GetLessonById(string id)
-    {
-        var l = lessonService.GetLessonById(id);
-        if (l == null) return NotFound();
-        var lesson = new LessonResponseModel
+        catch (Exception ex)
         {
-            LessonId = l.LessonId,
-            Title = l.Title,
-            OrderNumber = l.OrderNumber,
-            ChapterId = l.ChapterId,
-            Duration = l.Duration,
-            LessonType = l.LessonType,
-            IsPreviewable = l.IsPreviewable,
-            ChapterTitle = l.ChapterTitle,
-            CourseTitle = l.CourseTitle
-        };
-        return Ok(lesson);
+            return ResultViewModel.FailException(ex);
+        }
     }
 
     [HttpPost]
     public ResultViewModel CreateLesson([FromBody] LessonRequestModel model)
     {
-        var lesson = new Lesson
+        try
         {
-            LessonId = Guid.NewGuid().ToString(),
-            Title = model.Title,
-            OrderNumber = model.OrderNumber,
-            ChapterId = model.ChapterId,
-            Duration = model.Duration,
-            LessonType = model.LessonType,
-            IsPreviewable = model.IsPreviewable
-        };
-        var result = lessonService.CreateLesson(lesson);
-        Response.StatusCode = result.Code;
-        return result;
+            var lesson = new Lesson
+            {
+                LessonId = Guid.NewGuid().ToString(),
+                Title = model.Title,
+                OrderNumber = model.OrderNumber,
+                ChapterId = model.ChapterId,
+                Duration = model.Duration,
+                LessonType = model.LessonType,
+                IsPreviewable = model.IsPreviewable
+            };
+            var result = lessonService.CreateLesson(lesson);
+            Response.StatusCode = result.Code;
+            return result;
+        }
+        catch (Exception ex)
+        {
+            return ResultViewModel.FailException(ex);
+        }
     }
 
     [HttpPut("{id}")]
     public ResultViewModel UpdateLesson(string id, [FromBody] LessonRequestModel model)
     {
-        var lesson = new Lesson
+        try
         {
-            LessonId = id,
-            Title = model.Title,
-            OrderNumber = model.OrderNumber,
-            ChapterId = model.ChapterId,
-            Duration = model.Duration,
-            LessonType = model.LessonType,
-            IsPreviewable = model.IsPreviewable
-        };
-        var result = lessonService.UpdateLesson(lesson);
-        Response.StatusCode = result.Code;
-        return result;
+            var lesson = new Lesson
+            {
+                LessonId = id,
+                Title = model.Title,
+                OrderNumber = model.OrderNumber,
+                ChapterId = model.ChapterId,
+                Duration = model.Duration,
+                LessonType = model.LessonType,
+                IsPreviewable = model.IsPreviewable
+            };
+            var result = lessonService.UpdateLesson(lesson);
+            Response.StatusCode = result.Code;
+            return result;
+        }
+        catch (Exception ex)
+        {
+            return ResultViewModel.FailException(ex);
+        }
     }
 
     [HttpDelete("{id}")]
     public ResultViewModel DeleteLesson(string id)
     {
-        var result = lessonService.DeleteLesson(id);
-        Response.StatusCode = result.Code;
-        return result;
+        try
+        {
+            var result = lessonService.DeleteLesson(id);
+            Response.StatusCode = result.Code;
+            return result;
+        }
+        catch (Exception ex)
+        {
+            return ResultViewModel.FailException(ex);
+        }
     }
     
 }
