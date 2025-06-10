@@ -3,20 +3,28 @@
   "WorkspaceRootPath": "C:\\Users\\ngoha\\RiderProjects\\CourseManagement\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{6D5E9D56-DE1E-4049-B1A3-E8D0032F7E64}|CourseManagement\\CourseManagement.csproj|c:\\users\\ngoha\\riderprojects\\coursemanagement\\coursemanagement\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{6D5E9D56-DE1E-4049-B1A3-E8D0032F7E64}|CourseManagement\\CourseManagement.csproj|solutionrelative:coursemanagement\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{6415053F-B5B6-4308-8EF2-75BE7AAF1677}|CourseManagement.Core\\CourseManagement.Core.csproj|c:\\users\\ngoha\\riderprojects\\coursemanagement\\coursemanagement.core\\models\\category.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{6415053F-B5B6-4308-8EF2-75BE7AAF1677}|CourseManagement.Core\\CourseManagement.Core.csproj|solutionrelative:coursemanagement.core\\models\\category.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{6D5E9D56-DE1E-4049-B1A3-E8D0032F7E64}|CourseManagement\\CourseManagement.csproj|c:\\users\\ngoha\\riderprojects\\coursemanagement\\coursemanagement\\services\\courseservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{6D5E9D56-DE1E-4049-B1A3-E8D0032F7E64}|CourseManagement\\CourseManagement.csproj|solutionrelative:coursemanagement\\services\\courseservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{75C8CBE0-DCA5-4FF0-BDCA-2520EE643812}|CourseManagement.Data\\CourseManagement.Data.csproj|c:\\users\\ngoha\\riderprojects\\coursemanagement\\coursemanagement.data\\coursemanagement.data.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "RelativeMoniker": "D:0:0:{75C8CBE0-DCA5-4FF0-BDCA-2520EE643812}|CourseManagement.Data\\CourseManagement.Data.csproj|solutionrelative:coursemanagement.data\\coursemanagement.data.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{6D5E9D56-DE1E-4049-B1A3-E8D0032F7E64}|CourseManagement\\CourseManagement.csproj|c:\\users\\ngoha\\riderprojects\\coursemanagement\\coursemanagement\\repository\\genericrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{6D5E9D56-DE1E-4049-B1A3-E8D0032F7E64}|CourseManagement\\CourseManagement.csproj|solutionrelative:coursemanagement\\repository\\genericrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\ngoha\\RiderProjects\\CourseManagement\\CourseManagement\\Program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:CourseManagement\\Program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{6D5E9D56-DE1E-4049-B1A3-E8D0032F7E64}|CourseManagement\\CourseManagement.csproj|c:\\users\\ngoha\\riderprojects\\coursemanagement\\coursemanagement\\areas\\course\\controllers\\coursecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{6D5E9D56-DE1E-4049-B1A3-E8D0032F7E64}|CourseManagement\\CourseManagement.csproj|solutionrelative:coursemanagement\\areas\\course\\controllers\\coursecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\ngoha\\RiderProjects\\CourseManagement\\CourseManagement\\Areas\\Course\\Controllers\\CourseController.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:CourseManagement\\Areas\\Course\\Controllers\\CourseController.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\ngoha\\RiderProjects\\CourseManagement\\CourseManagement\\Repository\\GenericRepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:CourseManagement\\Repository\\GenericRepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\ngoha\\RiderProjects\\CourseManagement\\CourseManagement\\Services\\CourseService.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:CourseManagement\\Services\\CourseService.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -26,8 +34,21 @@
       "DocumentGroups": [
         {
           "DockedWidth": 245,
-          "SelectedChildIndex": 1,
+          "SelectedChildIndex": 2,
           "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "CourseManagement.Data",
+              "DocumentMoniker": "C:\\Users\\ngoha\\RiderProjects\\CourseManagement\\CourseManagement.Data\\CourseManagement.Data.csproj",
+              "RelativeDocumentMoniker": "CourseManagement.Data\\CourseManagement.Data.csproj",
+              "ToolTip": "C:\\Users\\ngoha\\RiderProjects\\CourseManagement\\CourseManagement.Data\\CourseManagement.Data.csproj*",
+              "RelativeToolTip": "CourseManagement.Data\\CourseManagement.Data.csproj*",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAIwAUAAAAgAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2025-06-09T10:53:44.716Z",
+              "EditorCaption": ""
+            },
             {
               "$type": "Bookmark",
               "Name": "ST:0:0:{3ae79031-e1bc-11d0-8f78-00a0c9110057}"
@@ -35,15 +56,26 @@
             {
               "$type": "Document",
               "DocumentIndex": 0,
+              "Title": "Category.cs",
+              "DocumentMoniker": "C:\\Users\\ngoha\\RiderProjects\\CourseManagement\\CourseManagement.Core\\Models\\Category.cs",
+              "RelativeDocumentMoniker": "CourseManagement.Core\\Models\\Category.cs",
+              "ToolTip": "C:\\Users\\ngoha\\RiderProjects\\CourseManagement\\CourseManagement.Core\\Models\\Category.cs",
+              "RelativeToolTip": "CourseManagement.Core\\Models\\Category.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAABMAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-09T10:54:28.629Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
               "Title": "Program.cs",
               "DocumentMoniker": "C:\\Users\\ngoha\\RiderProjects\\CourseManagement\\CourseManagement\\Program.cs",
               "RelativeDocumentMoniker": "CourseManagement\\Program.cs",
               "ToolTip": "C:\\Users\\ngoha\\RiderProjects\\CourseManagement\\CourseManagement\\Program.cs",
               "RelativeToolTip": "CourseManagement\\Program.cs",
-              "ViewState": "AgIAAAYAAAAAAAAAAAAAABYAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-06-03T03:07:57.167Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-06-03T03:07:57.167Z"
             },
             {
               "$type": "Document",
@@ -53,31 +85,28 @@
               "RelativeDocumentMoniker": "CourseManagement\\Areas\\Course\\Controllers\\CourseController.cs",
               "ToolTip": "C:\\Users\\ngoha\\RiderProjects\\CourseManagement\\CourseManagement\\Areas\\Course\\Controllers\\CourseController.cs",
               "RelativeToolTip": "CourseManagement\\Areas\\Course\\Controllers\\CourseController.cs",
-              "ViewState": "AQIAABUAAAAAAAAAAAAYwCUAAAArAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-06-03T02:58:01.105Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 4,
               "Title": "GenericRepository.cs",
               "DocumentMoniker": "C:\\Users\\ngoha\\RiderProjects\\CourseManagement\\CourseManagement\\Repository\\GenericRepository.cs",
               "RelativeDocumentMoniker": "CourseManagement\\Repository\\GenericRepository.cs",
               "ToolTip": "C:\\Users\\ngoha\\RiderProjects\\CourseManagement\\CourseManagement\\Repository\\GenericRepository.cs",
               "RelativeToolTip": "CourseManagement\\Repository\\GenericRepository.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAIAAAAiAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-06-03T02:49:40.166Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 5,
               "Title": "CourseService.cs",
               "DocumentMoniker": "C:\\Users\\ngoha\\RiderProjects\\CourseManagement\\CourseManagement\\Services\\CourseService.cs",
               "RelativeDocumentMoniker": "CourseManagement\\Services\\CourseService.cs",
               "ToolTip": "C:\\Users\\ngoha\\RiderProjects\\CourseManagement\\CourseManagement\\Services\\CourseService.cs",
               "RelativeToolTip": "CourseManagement\\Services\\CourseService.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAACQAAAAFAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-06-03T02:35:11.591Z"
             }

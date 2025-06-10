@@ -8,6 +8,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CourseManagement.Service", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CourseManagement.Data", "CourseManagement.Data\CourseManagement.Data.csproj", "{75C8CBE0-DCA5-4FF0-BDCA-2520EE643812}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CourseManagement.Api", "CourseManagement.Api\CourseManagement.Api.csproj", "{944F2588-E4F0-4001-AD42-3C1E78EF45A9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -30,5 +32,9 @@ Global
 		{75C8CBE0-DCA5-4FF0-BDCA-2520EE643812}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{75C8CBE0-DCA5-4FF0-BDCA-2520EE643812}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{75C8CBE0-DCA5-4FF0-BDCA-2520EE643812}.Release|Any CPU.Build.0 = Release|Any CPU
+		{944F2588-E4F0-4001-AD42-3C1E78EF45A9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{944F2588-E4F0-4001-AD42-3C1E78EF45A9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{944F2588-E4F0-4001-AD42-3C1E78EF45A9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{944F2588-E4F0-4001-AD42-3C1E78EF45A9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

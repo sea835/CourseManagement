@@ -5,7 +5,7 @@ namespace CourseManagement.Service.IServices;
 
 public interface ICourseService
 {
-    public IEnumerable<CourseViewModel> GetAllCourse();
+    public List<CourseViewModel> GetAllCourse();
     public CourseViewModel GetCourseById(string id);
     public ResultViewModel CreateCourse(Course course);
     public ResultViewModel UpdateCourse(CourseViewModel course);

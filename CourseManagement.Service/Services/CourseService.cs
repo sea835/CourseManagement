@@ -3,42 +3,50 @@ using CourseManagement.Core.Utilities;
 using CourseManagement.Core.ViewModels;
 using CourseManagement.Data.UnitOfWork;
 using CourseManagement.Service.IServices;
+using Microsoft.EntityFrameworkCore;
 
 namespace CourseManagement.Service.Services;
+
 public class CourseService : ICourseService
 {
     private readonly IUnitOfWork unitOfWork;
+
     public CourseService(IUnitOfWork unitOfWork)
     {
         this.unitOfWork = unitOfWork;
     }
-    public IEnumerable<CourseViewModel> GetAllCourse()
+
+    public List<CourseViewModel> GetAllCourse()
     {
         try
         {
-            var courses = unitOfWork.Course.GetAll().Where(c => c.IsDeleted == false).ToList();
-            var categories = unitOfWork.Category.GetAll().Where(c => c.IsDeleted == false).ToList();
-            var courseViewModels = from course in courses
-                                   join category in categories on course.CategoryId equals category.CategoryId
-                                   select new CourseViewModel
-                                   {
-                                       CourseId = course.CourseId,
-                                       Title = course.Title,
-                                       Description = course.Description,
-                                       FullDescription = course.FullDescription,
-                                       Level = course.Level,
-                                       Duration = course.Duration,
-                                       Language = course.Language,
-                                       ThumbnailUrl = course.ThumbnailUrl,
-                                       Price = course.Price,
-                                       IsFree = course.IsFree,
-                                       AuthorName = course.AuthorName,
-                                       CategoryId = course.CategoryId,
-                                       CategoryName = category.Name
-                                   };
-            return courseViewModels;
+            var courses = unitOfWork.Course.BuildQuery(c => c.IsDeleted == false).Include(c => c.Category).ToList();
+            var listCoursesViewModel = new List<CourseViewModel>();
+            foreach (var course in courses)
+            {
+                listCoursesViewModel.Add(
+                    new CourseViewModel
+                    {
+                        CourseId = course.CourseId,
+                        Title = course.Title,
+                        Description = course.Description,
+                        FullDescription = course.FullDescription,
+                        Level = course.Level,
+                        Duration = course.Duration,
+                        Language = course.Language,
+                        ThumbnailUrl = course.ThumbnailUrl,
+                        Price = course.Price,
+                        IsFree = course.IsFree,
+                        AuthorName = course.AuthorName,
+                        CategoryId = course.CategoryId,
+                        CategoryName = course.Category.Name,
+                    });
+            }
+
+            return listCoursesViewModel;
         }
-        catch (Exception ex){ 
+        catch (Exception ex)
+        {
             throw new Exception("Get All Course Failed", ex);
         }
     }
@@ -106,7 +114,7 @@ public class CourseService : ICourseService
     {
         try
         {
-            var existingCourse = unitOfWork.Course.BuildQuery(c=> c.CourseId == course.CourseId).FirstOrDefault();
+            var existingCourse = unitOfWork.Course.BuildQuery(c => c.CourseId == course.CourseId).FirstOrDefault();
             existingCourse.Title = course.Title;
             existingCourse.Description = course.Description;
             existingCourse.FullDescription = course.FullDescription;
@@ -128,13 +136,14 @@ public class CourseService : ICourseService
             return ResultViewModel.FailException(ex);
         }
     }
-    
+
     public ResultViewModel GetAllCoursesSelect2(string search)
     {
         try
         {
             var courses = unitOfWork.Course.GetAll()
-                .Where(c => c.IsDeleted == false && (string.IsNullOrEmpty(search) || c.Title.Contains(search, StringComparison.OrdinalIgnoreCase)))
+                .Where(c => c.IsDeleted == false && (string.IsNullOrEmpty(search) ||
+                                                     c.Title.Contains(search, StringComparison.OrdinalIgnoreCase)))
                 .Select(c => new Select2ViewModel
                 {
                     Id = c.CourseId,
@@ -147,7 +156,7 @@ public class CourseService : ICourseService
             return ResultViewModel.FailException(ex);
         }
     }
-    
+
     public ResultViewModel GetAllCoursesByCategoryId(string categoryId)
     {
         try
@@ -187,8 +196,8 @@ public class CourseService : ICourseService
             IsFree = course.IsFree,
             AuthorName = course.AuthorName,
             CategoryId = course.CategoryId,
-            CategoryName = unitOfWork.Category.BuildQuery(c => c.CategoryId == course.CategoryId).FirstOrDefault()?.Name
+            CategoryName = unitOfWork.Category.BuildQuery(c => c.CategoryId == course.CategoryId).FirstOrDefault()
+                ?.Name
         };
-
     }
 }

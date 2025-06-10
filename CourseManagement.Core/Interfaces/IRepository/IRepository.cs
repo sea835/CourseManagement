@@ -7,8 +7,8 @@ namespace CourseManagement.Core.Interfaces.IRepository
         Task Add(T entity);
         Task Update(T entity); 
         T GetById(string id);
-        IEnumerable<T> GetAll();
-        IEnumerable<T> BuildQuery(Expression<Func<T, bool>> predicate);
+        IQueryable<T> GetAll();
+        IQueryable<T> BuildQuery(Expression<Func<T, bool>> predicate);
         Task Delete(string id);      
         Task Restore(string id);   
         void SaveChanges();

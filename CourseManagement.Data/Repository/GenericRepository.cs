@@ -41,13 +41,13 @@ public abstract class GenericRepository<T> : IRepository<T> where T : class
         return context.Set<T>().Find(id);
     }
 
-    public virtual IEnumerable<T> GetAll()
+    public virtual IQueryable<T> GetAll()
     {
         var entities = context.Set<T>();
         return entities;
     }
 
-    public IEnumerable<T> BuildQuery(Expression<Func<T, bool>> predicate)
+    public IQueryable<T> BuildQuery(Expression<Func<T, bool>> predicate)
     {
         var entities = context.Set<T>().Where(predicate);
         return entities;
