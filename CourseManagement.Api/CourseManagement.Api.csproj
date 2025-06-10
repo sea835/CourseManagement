@@ -23,4 +23,8 @@
       <ProjectReference Include="..\CourseManagement.Service\CourseManagement.Service.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="wwwroot\videos\" />
+    </ItemGroup>
+
 </Project>

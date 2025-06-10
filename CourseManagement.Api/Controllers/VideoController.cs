@@ -118,8 +118,17 @@ public class VideoController(IVideoService videoService) : ControllerBase
     }
 
     [HttpPost("uploadVideo")]
-    public async Task<IActionResult> UploadAndCreateVideo([FromBody]VideoViewModel model)
+    public async Task<IActionResult> UploadAndCreateVideo([FromForm]VideoRequestModel requestModel)
     {
+        var model = new VideoViewModel()
+        {
+            LessonId = requestModel.LessonId,
+            Title = requestModel.Title,
+            Url = requestModel.Url,
+            Duration = requestModel.Duration,
+            Provider = requestModel.Provider,
+            VideoFile = requestModel.VideoFile,
+        };
         string savedUrl = string.Empty;
         await videoService.UploadAndCreateVideo(
             model,
