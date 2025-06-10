@@ -59,12 +59,12 @@ public class VideoController(IVideoService videoService) : ControllerBase
     }
 
     [HttpPost("uploadVideo")]
-    public IActionResult UploadAndCreateVideo([FromBody]VideoViewModel model)
+    public IActionResult UploadAndCreateVideo(IFormFile videoFile, [FromBody]VideoViewModel model)
     {
         string savedUrl = string.Empty;
         var result = videoService.UploadAndCreateVideo(
             model,
-            model.VideoFile,
+            videoFile,
             Directory.GetCurrentDirectory(),
             url => savedUrl = url
         );
