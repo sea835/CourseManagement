@@ -5,6 +5,7 @@ namespace CourseManagement.Service.IServices
     public interface ILessonContentService
     {
         public ContentViewModel GetContentByLessonId(string id);
+        public ContentViewModel GetById(string id);
         public ResultViewModel CreateContent(ContentViewModel content);
         public ResultViewModel UpdateContent(ContentViewModel content);
         public ResultViewModel DeleteContent(string id);

@@ -1,7 +1,11 @@
 ﻿using CourseManagement.Core.Models;
+using System;
+using System.Linq;
+using CourseManagement.Core.RequestModels;
 using CourseManagement.Core.ViewModels;
 using CourseManagement.Service.IServices;
 using Microsoft.AspNetCore.Mvc;
+using System.IO;
 
 namespace CourseManagement.Api.Controllers;
 
@@ -10,38 +14,81 @@ namespace CourseManagement.Api.Controllers;
 public class VideoController(IVideoService videoService) : ControllerBase
 {
     [HttpGet]
-    public IActionResult GetAllVideos()
+    public async Task<IActionResult> GetAllVideos()
     {
-        var videos = videoService.GetAllVideos();
-        return Ok(videos);
+        var videos = await videoService.GetAllVideos();
+        var result = videos.Select(v => new VideoResponseModel
+        {
+            VideoId = v.VideoId,
+            LessonId = v.LessonId,
+            Title = v.Title,
+            Url = v.Url,
+            Duration = v.Duration,
+            Provider = v.Provider,
+            LessonTitle = v.LessonTitle,
+            ChapterTitle = v.ChapterTitle,
+            CourseTitle = v.CourseTitle
+        });
+        return Ok(result);
     }
 
     [HttpGet("{id}")]
-    public IActionResult GetVideoById(string id)
+    public async Task<IActionResult> GetVideoById(string id)
     {
-        var video = videoService.GetById(id);
+        var v = await videoService.GetById(id);
+        if (v == null) return NotFound();
+        var video = new VideoResponseModel
+        {
+            VideoId = v.VideoId,
+            LessonId = v.LessonId,
+            Title = v.Title,
+            Url = v.Url,
+            Duration = v.Duration,
+            Provider = v.Provider,
+            LessonTitle = v.LessonTitle,
+            ChapterTitle = v.ChapterTitle,
+            CourseTitle = v.CourseTitle
+        };
         return Ok(video);
     }
 
     [HttpPost]
-    public IActionResult AddVideo([FromBody] VideoViewModel video)
+    public async Task<IActionResult> AddVideo([FromBody] VideoRequestModel model)
     {
-        var result = videoService.Create(video);
-        return Ok(result);
+        var video = new VideoViewModel
+        {
+            VideoId = Guid.NewGuid().ToString(),
+            LessonId = model.LessonId,
+            Title = model.Title,
+            Url = model.Url,
+            Duration = model.Duration,
+            Provider = model.Provider
+        };
+        await videoService.Create(video);
+        return Ok();
     }
 
-    [HttpPut]
-    public IActionResult UpdateVideo([FromBody] VideoViewModel video)
+    [HttpPut("{id}")]
+    public async Task<IActionResult> UpdateVideo(string id, [FromBody] VideoRequestModel model)
     {
-        var result = videoService.Update(video);
-        return Ok(result);
+        var video = new VideoViewModel
+        {
+            VideoId = id,
+            LessonId = model.LessonId,
+            Title = model.Title,
+            Url = model.Url,
+            Duration = model.Duration,
+            Provider = model.Provider
+        };
+        await videoService.Update(video);
+        return Ok();
     }
 
     [HttpDelete("{id}")]
-    public IActionResult DeleteVideo(string id)
+    public async Task<IActionResult> DeleteVideo(string id)
     {
-        var result = videoService.Delete(id);
-        return Ok(result);
+        await videoService.Delete(id);
+        return Ok();
     }
 
     // [HttpGet]
@@ -51,20 +98,32 @@ public class VideoController(IVideoService videoService) : ControllerBase
     //     return Ok(video);
     // }
 
-    [HttpGet("/lesson/{lessonId}")]
+    [HttpGet("lesson/{lessonId}")]
     public IActionResult GetAllVideosByLessonId(string lessonId)
     {
-        var videos = videoService.GetAllVideosByLessonId(lessonId);
-        return Ok(videos); 
+        var videos = videoService.GetAllVideosByLessonId(lessonId)
+            .Select(v => new VideoResponseModel
+            {
+                VideoId = v.VideoId,
+                LessonId = v.LessonId,
+                Title = v.Title,
+                Url = v.Url,
+                Duration = v.Duration,
+                Provider = v.Provider,
+                LessonTitle = v.LessonTitle,
+                ChapterTitle = v.ChapterTitle,
+                CourseTitle = v.CourseTitle
+            });
+        return Ok(videos);
     }
 
     [HttpPost("uploadVideo")]
-    public IActionResult UploadAndCreateVideo(IFormFile videoFile, [FromBody]VideoViewModel model)
+    public async Task<IActionResult> UploadAndCreateVideo([FromBody]VideoViewModel model)
     {
         string savedUrl = string.Empty;
-        var result = videoService.UploadAndCreateVideo(
+        await videoService.UploadAndCreateVideo(
             model,
-            videoFile,
+            model.VideoFile,
             Directory.GetCurrentDirectory(),
             url => savedUrl = url
         );
