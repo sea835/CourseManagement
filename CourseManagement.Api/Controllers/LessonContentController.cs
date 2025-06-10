@@ -1,4 +1,6 @@
+using System;
 ﻿using CourseManagement.Core.Models;
+using CourseManagement.Core.RequestModels;
 using CourseManagement.Core.ViewModels;
 using CourseManagement.Service.IServices;
 using Microsoft.AspNetCore.Mvc;
@@ -9,31 +11,61 @@ namespace CourseManagement.Api.Controllers;
 [Route("api/[controller]")]
 public class LessonContentController(ILessonContentService lessonContentService) : ControllerBase
 {
-    [HttpGet("{lessonId}")]
+    [HttpGet("lesson/{lessonId}")]
     public IActionResult GetLessonContentByLessonId(string lessonId)
     {
         var content = lessonContentService.GetContentByLessonId(lessonId);
-        return Ok(content);
+        if (content == null) return NotFound();
+        var result = new ContentResponseModel
+        {
+            ContentId = content.ContentId,
+            LessonId = content.LessonId,
+            MainContent = content.MainContent,
+            Summary = content.Summary
+        };
+        return Ok(result);
     }
 
     [HttpGet("{id}")]
-    public IActionResult GetContentByLessonId(string id)
+    public IActionResult GetContentById(string id)
     {
-        var content = lessonContentService.GetContentByLessonId(id);
+        var c = lessonContentService.GetById(id);
+        if (c == null) return NotFound();
+        var content = new ContentResponseModel
+        {
+            ContentId = c.ContentId,
+            LessonId = c.LessonId,
+            MainContent = c.MainContent,
+            Summary = c.Summary
+        };
         return Ok(content);
     }
 
     [HttpPost]
-    public ResultViewModel AddContent([FromBody] ContentViewModel content)
+    public ResultViewModel AddContent([FromBody] ContentRequestModel model)
     {
+        var content = new ContentViewModel
+        {
+            ContentId = Guid.NewGuid().ToString(),
+            LessonId = model.LessonId,
+            MainContent = model.MainContent,
+            Summary = model.Summary
+        };
         var result = lessonContentService.CreateContent(content);
         Response.StatusCode = result.Code;
         return result;
     }
 
-    [HttpPut]
-    public ResultViewModel UpdateContent([FromBody] ContentViewModel content)
+    [HttpPut("{id}")]
+    public ResultViewModel UpdateContent(string id, [FromBody] ContentRequestModel model)
     {
+        var content = new ContentViewModel
+        {
+            ContentId = id,
+            LessonId = model.LessonId,
+            MainContent = model.MainContent,
+            Summary = model.Summary
+        };
         var result = lessonContentService.UpdateContent(content);
         Response.StatusCode = result.Code;
         return result;
@@ -47,18 +79,18 @@ public class LessonContentController(ILessonContentService lessonContentService)
         return result;
     }
 
-    [HttpPut("UpdateSummaryContent")]
-    public ResultViewModel UpdateSummaryContent([FromBody] ContentViewModel content)
+    [HttpPut("UpdateSummaryContent/{id}")]
+    public ResultViewModel UpdateSummaryContent(string id, [FromBody] ContentRequestModel content)
     {
-        var result = lessonContentService.UpdateSummary(content.ContentId, content.Summary);
+        var result = lessonContentService.UpdateSummary(id, content.Summary);
         Response.StatusCode = result.Code;
         return result;
     }
 
-    [HttpPut("UpdateMainContent")]
-    public ResultViewModel UpdateMainContent([FromBody] ContentViewModel content)
+    [HttpPut("UpdateMainContent/{id}")]
+    public ResultViewModel UpdateMainContent(string id, [FromBody] ContentRequestModel content)
     {
-        var result = lessonContentService.UpdateMainContent(content.ContentId, content.MainContent);
+        var result = lessonContentService.UpdateMainContent(id, content.MainContent);
         Response.StatusCode = result.Code;
         return result;
     }
