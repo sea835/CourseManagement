@@ -57,7 +57,7 @@ public class DocumentService: IDocumentService
                 return ResultViewModel.Fail("Document cannot be null");
             }
             unitOfWork.Document.Add(document);
-            unitOfWork.SaveChange();
+            // unitOfWork.SaveChange();
             return ResultViewModel.Success("Document created successfully", document);
         }
         catch (Exception ex)
@@ -79,7 +79,7 @@ public class DocumentService: IDocumentService
             existingDocument.SizeInBytes = document.SizeInBytes;
             existingDocument.SetUpdated();
             unitOfWork.Document.Update(document);
-            unitOfWork.SaveChange();
+            // unitOfWork.SaveChange();
             return ResultViewModel.Success("Document updated successfully", document);
         }
         catch (Exception ex)
@@ -93,7 +93,7 @@ public class DocumentService: IDocumentService
         try
         {
             unitOfWork.Document.Delete(id);
-            unitOfWork.SaveChange();
+            // unitOfWork.SaveChange();
             return ResultViewModel.Success("Document deleted successfully");
         }
         catch (Exception ex)

@@ -86,7 +86,7 @@ public class ChapterService : IChapterService
             existingChapter.OrderNumber = chapter.OrderNumber;
             existingChapter.SetUpdated();
             unitOfWork.Chapter.Update(chapter);
-            unitOfWork.SaveChange();
+            // unitOfWork.SaveChange();
             return ResultViewModel.Success("Update chapter successfully");
         }
         catch (Exception ex)
@@ -101,7 +101,7 @@ public class ChapterService : IChapterService
         {
             chapter.ChapterId = Guid.NewGuid().ToString();
             unitOfWork.Chapter.Add(chapter);
-            unitOfWork.SaveChange();
+            // unitOfWork.SaveChange();
             return ResultViewModel.Success("Create new chapter successfully");
         }
         catch (Exception ex)
@@ -115,7 +115,7 @@ public class ChapterService : IChapterService
         try
         {
             unitOfWork.Chapter.Delete(id);
-            unitOfWork.SaveChange();
+            // unitOfWork.SaveChange();
             return ResultViewModel.Success("Delete chapter successfully");
         }
         catch (Exception ex)

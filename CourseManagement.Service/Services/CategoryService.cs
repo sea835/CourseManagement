@@ -46,7 +46,7 @@ public class CategoryService: ICategoryService
         {
             category.CategoryId = Guid.NewGuid().ToString();
             unitOfWork.Category.Add(category);
-            unitOfWork.SaveChange();
+            // unitOfWork.SaveChange();
             return ResultViewModel.Success("Create New Category Success");
         }
         catch (Exception ex)
@@ -65,7 +65,7 @@ public class CategoryService: ICategoryService
             existingCategory.Description = category.Description;
             existingCategory.SetUpdated();
             unitOfWork.Category.Update(category);
-            unitOfWork.SaveChange();
+            // unitOfWork.SaveChange();
             return ResultViewModel.Success("Update Category Success");
         }
         catch (Exception ex)
@@ -79,7 +79,7 @@ public class CategoryService: ICategoryService
         try
         {
             unitOfWork.Category.Delete(id);
-            unitOfWork.SaveChange();
+            // unitOfWork.SaveChange();
             return ResultViewModel.Success("Delete Category Success");
         }
         catch (Exception ex)

@@ -87,7 +87,7 @@ public class CourseService : ICourseService
         {
             course.CourseId = IdGenerator.GenerateCourseId();
             unitOfWork.Course.Add(course);
-            unitOfWork.SaveChange();
+            // unitOfWork.SaveChange();
             return ResultViewModel.Success("Create New Course Success");
         }
         catch (Exception ex)
@@ -101,7 +101,7 @@ public class CourseService : ICourseService
         try
         {
             unitOfWork.Course.Delete(id);
-            unitOfWork.SaveChange();
+            // unitOfWork.SaveChange();
             return ResultViewModel.Success("Delete Course Success");
         }
         catch (Exception ex)
@@ -128,7 +128,7 @@ public class CourseService : ICourseService
             existingCourse.CategoryId = course.CategoryId;
             existingCourse.SetUpdated();
             unitOfWork.Course.Update(existingCourse);
-            unitOfWork.SaveChange();
+            // unitOfWork.SaveChange();
             return ResultViewModel.Success("Update Course Success");
         }
         catch (Exception ex)
